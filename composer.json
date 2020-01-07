@@ -1,0 +1,19 @@
+{
+	"name":"mk2/core",
+	"description": "Simple PHP Framework 'mk2' default Core library.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [{
+		"name": "Nakajima Satoru",
+		"email": "info@mk2-php.com"
+	}],
+	"keywords": ["PHP","Framework","mk2","Web","PHP7.2"],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"mk2\\core\\":"src/"
+		}
+	}
+}
