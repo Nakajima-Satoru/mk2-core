@@ -67,16 +67,32 @@ class Mk2GenCLI{
 		if(!defined('MK2_PATH_RENDERING')){
 			define("MK2_PATH_RENDERING","Rendering");
 		}
-		if(!defined('MK2_PATH_APPS')){
-			define("MK2_PATH_APPS",[
-				"Controller"=>MK2_PATH_APP.MK2_PATH_BACKEND."/Controller/",
-				"Packer"=>MK2_PATH_APP.MK2_PATH_BACKEND."/Packer/",
-				"Shell"=>MK2_PATH_APP.MK2_PATH_BACKEND."/Shell/",
-				"Model"=>MK2_PATH_APP.MK2_PATH_MIDDLE."/Model/",
-				"Table"=>MK2_PATH_APP.MK2_PATH_MIDDLE."/Table/",
-				"Validator"=>MK2_PATH_APP.MK2_PATH_MIDDLE."/Validator/",
-				"ViewPart"=>MK2_PATH_APP.MK2_PATH_RENDERING."/ViewPart/",
-			]);
+		if(!defined("MK2_PATH_APP_CONTROLLER")){
+			define("MK2_PATH_APP_CONTROLLER",MK2_PATH_APP.MK2_PATH_BACKEND."/Controller/");
+		}
+		if(!defined("MK2_PATH_APP_PACKER")){
+			define("MK2_PATH_APP_PACKER",MK2_PATH_APP.MK2_PATH_BACKEND."/Packer/");
+		}
+		if(!defined("MK2_PATH_APP_SHELL")){
+			define("MK2_PATH_APP_SHELL",MK2_PATH_APP.MK2_PATH_BACKEND."/Shell/");
+		}
+		if(!defined("MK2_PATH_APP_MODEL")){
+			define("MK2_PATH_APP_MODEL",MK2_PATH_APP.MK2_PATH_MIDDLE."/Model/");
+		}
+		if(!defined("MK2_PATH_APP_TABLE")){
+			define("MK2_PATH_APP_TABLE",MK2_PATH_APP.MK2_PATH_MIDDLE."/Table/");
+		}
+		if(!defined("MK2_PATH_APP_VALIDATOR")){
+			define("MK2_PATH_APP_VALIDATOR",MK2_PATH_APP.MK2_PATH_MIDDLE."/Validator/");
+		}
+		if(!defined("MK2_PATH_APP_RENDER")){
+			define("MK2_PATH_APP_RENDER",MK2_PATH_APP.MK2_PATH_RENDERING."/Render/");
+		}
+		if(!defined("MK2_PATH_APP_TEMPLATE")){
+			define("MK2_PATH_APP_TEMPLATE",MK2_PATH_APP.MK2_PATH_RENDERING."/Template/");
+		}
+		if(!defined("MK2_PATH_APP_VIEWPART")){
+			define("MK2_PATH_APP_VIEWPART",MK2_PATH_APP.MK2_PATH_RENDERING."/ViewPart/");
 		}
 	}
 
@@ -186,7 +202,7 @@ class Mk2GenCLI{
 
 		$shellName=ucfirst($argv[0])."Shell";
 
-		$shellPath=MK2_PATH_APPS["Shell"].$shellName.".php";
+		$shellPath=MK2_PATH_APP_SHELL.$shellName.".php";
 
 		if(!file_exists($shellPath)){
 			throw new \Exception('Not Found "'.$shellName.'" File.');

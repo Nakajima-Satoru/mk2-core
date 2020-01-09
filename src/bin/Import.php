@@ -88,10 +88,10 @@ class Import{
 			$allow_dir=Config::get("allowDirectory");
 
 			if($needPath){
-				$classPath=MK2_PATH_APPS[$className].$needPath;
+				$classPath=constant("MK2_PATH_APP_".strtoupper($className)).$needPath;
 			}
 			else{
-				$classPath=MK2_PATH_APPS[$className];
+				$classPath=constant("MK2_PATH_APP_".strtoupper($className));
 			}
 
 			$pathList=[

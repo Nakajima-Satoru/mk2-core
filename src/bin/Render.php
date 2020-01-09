@@ -43,14 +43,14 @@ class Render{
 
 		if($this->Template){
 
-			$template_url=MK2_PATH_APPS["Template"].$this->Template.".view";
+			$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.".view";
 			include($template_url);
 
 		}
 		else
 		{
 
-			$renderUrl=MK2_PATH_APPS["Render"].ucfirst(Request::$params["controller"])."/";
+			$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 
 			if(!empty($this->render)){
 				$renderUrl.=$this->render.".view";
@@ -197,7 +197,7 @@ class Render{
 			}
 		}
 
-		$renderUrl=MK2_PATH_APPS["Render"].ucfirst(Request::$params["controller"])."/";
+		$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 
 		if(!empty($this->render)){
 			$renderUrl.=$this->render.".view";
@@ -230,7 +230,7 @@ class Render{
 			}
 		}
 
-		$partUrl=MK2_PATH_APPS["ViewPart"].$name.".view";
+		$partUrl=MK2_PATH_APP_VIEWPART.$name.".view";
 
 		if($oBuff){
 			ob_start();
@@ -250,7 +250,7 @@ class Render{
 
 	protected function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APPS["ViewPart"].$name.".view")){
+		if(file_exists(MK2_PATH_APP_VIEWPART.$name.".view")){
 			return true;
 		}
 		else

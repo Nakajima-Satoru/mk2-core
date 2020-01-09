@@ -123,7 +123,7 @@ trait traitCoreBlock{
 
 	private function _addClassLoading($classType,$params,$addAllow=null){
 
-		$classPath=MK2_PATH_APPS[$classType];
+		$classPath=constant("MK2_PATH_APP_".strtoupper($classType));
 		
 		if(!is_array($params)){
 			$params=[$params];
@@ -352,7 +352,7 @@ trait traitCoreBlock{
 			}
 		}
 
-		$view_url=MK2_PATH_APPS["Render"].ucfirst(Request::$params["controller"])."/";
+		$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 		if(!empty($this->render)){
 			$view_url.=$this->render.".view";
 		}
@@ -380,7 +380,7 @@ trait traitCoreBlock{
 			}
 		}
 
-		$part_url=MK2_PATH_APPS["ViewPart"].$name.".view";
+		$part_url=MK2_PATH_APP_VIEWPART.$name.".view";
 
 		ob_start();
 		include($part_url);
@@ -394,7 +394,7 @@ trait traitCoreBlock{
 
 	protected function existRender($name=null){
 
-		$path=MK2_PATH_APPS["Render"].ucfirst(Request::$params["controller"])."/";
+		$path=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 		if($name){
 			$path.=$name.".view";
 		}
@@ -417,7 +417,7 @@ trait traitCoreBlock{
 
 	protected function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APPS["ViewPart"].$name.".view")){
+		if(file_exists(MK2_PATH_APP_VIEWPART.$name.".view")){
 			return true;
 		}
 		else
@@ -431,7 +431,7 @@ trait traitCoreBlock{
 
 	protected function existTemplate($name=null){
 
-		$path=MK2_PATH_APPS["Template"];
+		$path=MK2_PATH_APP_TEMPLATE;
 		if($name){
 			$path.=$name.".view";
 		}

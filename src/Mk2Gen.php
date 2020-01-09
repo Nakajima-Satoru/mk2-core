@@ -88,18 +88,32 @@ class Mk2Gen{
 		if(!defined('MK2_PATH_RENDERING')){
 			define("MK2_PATH_RENDERING","Rendering");
 		}
-		if(!defined('MK2_PATH_APPS')){
-			define("MK2_PATH_APPS",[
-				"Controller"=>MK2_PATH_APP.MK2_PATH_BACKEND."/Controller/",
-				"Packer"=>MK2_PATH_APP.MK2_PATH_BACKEND."/Packer/",
-				"Shell"=>MK2_PATH_APP.MK2_PATH_BACKEND."/Shell/",
-				"Model"=>MK2_PATH_APP.MK2_PATH_MIDDLE."/Model/",
-				"Table"=>MK2_PATH_APP.MK2_PATH_MIDDLE."/Table/",
-				"Validator"=>MK2_PATH_APP.MK2_PATH_MIDDLE."/Validator/",
-				"Render"=>MK2_PATH_APP.MK2_PATH_RENDERING."/Render/",
-				"Template"=>MK2_PATH_APP.MK2_PATH_RENDERING."/Template/",
-				"ViewPart"=>MK2_PATH_APP.MK2_PATH_RENDERING."/ViewPart/",
-			]);
+		if(!defined("MK2_PATH_APP_CONTROLLER")){
+			define("MK2_PATH_APP_CONTROLLER",MK2_PATH_APP.MK2_PATH_BACKEND."/Controller/");
+		}
+		if(!defined("MK2_PATH_APP_PACKER")){
+			define("MK2_PATH_APP_PACKER",MK2_PATH_APP.MK2_PATH_BACKEND."/Packer/");
+		}
+		if(!defined("MK2_PATH_APP_SHELL")){
+			define("MK2_PATH_APP_SHELL",MK2_PATH_APP.MK2_PATH_BACKEND."/Shell/");
+		}
+		if(!defined("MK2_PATH_APP_MODEL")){
+			define("MK2_PATH_APP_MODEL",MK2_PATH_APP.MK2_PATH_MIDDLE."/Model/");
+		}
+		if(!defined("MK2_PATH_APP_TABLE")){
+			define("MK2_PATH_APP_TABLE",MK2_PATH_APP.MK2_PATH_MIDDLE."/Table/");
+		}
+		if(!defined("MK2_PATH_APP_VALIDATOR")){
+			define("MK2_PATH_APP_VALIDATOR",MK2_PATH_APP.MK2_PATH_MIDDLE."/Validator/");
+		}
+		if(!defined("MK2_PATH_APP_RENDER")){
+			define("MK2_PATH_APP_RENDER",MK2_PATH_APP.MK2_PATH_RENDERING."/Render/");
+		}
+		if(!defined("MK2_PATH_APP_TEMPLATE")){
+			define("MK2_PATH_APP_TEMPLATE",MK2_PATH_APP.MK2_PATH_RENDERING."/Template/");
+		}
+		if(!defined("MK2_PATH_APP_VIEWPART")){
+			define("MK2_PATH_APP_VIEWPART",MK2_PATH_APP.MK2_PATH_RENDERING."/ViewPart/");
 		}
 	}
 
@@ -195,7 +209,7 @@ class Mk2Gen{
 
 		$cont_jugement=false;
 
-		$cont_url=MK2_PATH_APPS["Controller"].ucfirst(Request::$params["controller"])."Controller.php";
+		$cont_url=MK2_PATH_APP_CONTROLLER.ucfirst(Request::$params["controller"])."Controller.php";
 
 		if(!empty(file_exists($cont_url))){
 			$cont_jugement=true;
@@ -207,7 +221,7 @@ class Mk2Gen{
 
 				if(!empty($allow_dir["Controller"])){
 					foreach($allow_dir["Controller"] as $a_){
-						$cont_url=MK2_PATH_APPS["Controller"].$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
+						$cont_url=MK2_PATH_APP_CONTROLLER.$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
 						if(!empty(file_exists($cont_url))){
 							$cont_jugement=true;
 							break;
@@ -347,7 +361,7 @@ class Mk2Gen{
 
 		$render_jugement=false;
 
-		$render_url=MK2_PATH_APPS["Render"].Request::$params["render"].".view";
+		$render_url=MK2_PATH_APP_RENDER.Request::$params["render"].".view";
 
 		if(!empty(file_exists($render_url))){
 			return $render_url;
