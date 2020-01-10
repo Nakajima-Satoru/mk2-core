@@ -178,7 +178,28 @@ class Mk2Gen{
 		$useClass=Config::get("useClass");
 
 		foreach($useClass as $className=>$u_){
-			include_once("bin/".$className.".php");
+
+			if($className=="Render"){
+				$templateEngine=Config::get("templateEngine");
+
+				if($templateEngine){
+					if($templateEngine=="Smarty"){
+						include_once("bin/Render-of-Smarty.php");
+					}					
+					else
+					{
+						throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');
+					}
+				}
+				else
+				{
+					include_once("bin/".$className.".php");
+				}
+			}
+			else
+			{
+				include_once("bin/".$className.".php");
+			}
 		}
 
 	}
