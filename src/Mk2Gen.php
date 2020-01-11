@@ -192,10 +192,6 @@ class Mk2Gen{
 						# if Twig..
 						include_once("bin/Render-of-Twig.php");
 					}
-					else if($templateEngine=="Blade"){
-						# if Blade..
-						include_once("bin/Render-of-Blade.php");
-					}		
 					else
 					{
 						throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');

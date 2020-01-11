@@ -20,19 +20,14 @@ class Render{
 
 	public function __construct($params=array()){
 
-		$this->templateEngine=Config::get("templateEngine");
-		if($this->templateEngine){
-			$teCheck=false;
-			if($this->templateEngine=="Smarty"){
-				if(class_exists($this->templateEngine)){
-					$this->Smarty=new \Smarty();
-					$teCheck=true;
-				}
-			}
+		$teCheck=false;
+		if(class_exists("Smarty")){
+			$this->Smarty=new \Smarty();
+			$teCheck=true;
+		}
 
-			if(!$teCheck){
-				throw new \Exception('template Engine not found "'.$this->templateEngine.'".');
-			}
+		if(!$teCheck){
+			throw new \Exception('template Engine not found "Smarty".');
 		}
 
 		if(!empty($params["__view_output"])){
@@ -54,9 +49,7 @@ class Render{
 
 		if(!empty($this->__view_output)){
 			foreach($this->__view_output as $key=>$o_){
-				if($this->templateEngine=="Smarty"){
-					$this->Smarty->assign($key,$o_);
-				}
+				$this->Smarty->assign($key,$o_);
 			}
 		}
 
@@ -64,10 +57,8 @@ class Render{
 
 			$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.".view";
 
-			if($this->templateEngine=="Smarty"){
-				$this->Smarty->assign('this',$this);
-				$this->Smarty->display($template_url);
-			}
+			$this->Smarty->assign('this',$this);
+			$this->Smarty->display($template_url);
 
 		}
 		else
@@ -85,10 +76,8 @@ class Render{
 
 			if(!empty(file_exists($renderUrl))){
 
-				if($this->templateEngine=="Smarty"){
-					$this->Smarty->assign('this',$this);
-					$this->Smarty->display($renderUrl);
-				}
+				$this->Smarty->assign('this',$this);
+				$this->Smarty->display($renderUrl);
 	
 			}
 			else
@@ -221,9 +210,7 @@ class Render{
 		//set layout
 		if(!empty($this->__view_output)){
 			foreach($this->__view_output as $key=>$o_){
-				if($this->templateEngine=="Smarty"){
-					$this->Smarty->assign($key,$o_);
-				}
+				$this->Smarty->assign($key,$o_);
 			}
 		}
 
@@ -237,10 +224,8 @@ class Render{
 			$renderUrl.=Request::$params["action"].".view";
 		}
 
-		if($this->templateEngine=="Smarty"){
-			$this->Smarty->assign("this",$this);
-			$this->Smarty->display($renderUrl);
-		}
+		$this->Smarty->assign("this",$this);
+		$this->Smarty->display($renderUrl);
 
 	}
 
@@ -251,23 +236,14 @@ class Render{
 		//set layout
 		if(!empty($this->__view_output)){
 			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
+				$this->Smarty->assign($key,$o_);
 			}
 		}
 
 		$partUrl=MK2_PATH_APP_VIEWPART.$name.".view";
 
-		if($oBuff){
-			ob_start();
-		}
-
-		include($partUrl);
-
-		if($oBuff){
-			$contents=ob_get_contents();
-			ob_end_clean();
-			return $contents;
-		}
+		$this->Smarty->assign("this",$this);
+		$this->Smarty->display($partUrl);
 
 	}
 
