@@ -16,6 +16,8 @@ namespace mk2\core;
 
 trait traitCoreBlock{
 
+	public $__view_output=[];
+
 	# protected $_obj=[];
 
 	public function __construct($option=null){
@@ -341,9 +343,15 @@ trait traitCoreBlock{
 
 	}
 
+	# (protected) View values set
+
+	protected function set($name,$value){
+		$this->__view_output[$name]=$value;
+	}
+
 	# (protected) getRender
 
-	protected function getRender(){
+	protected function getRender($renderName){
 
 		//set Template
 		if(!empty($this->__view_output)){
@@ -352,21 +360,15 @@ trait traitCoreBlock{
 			}
 		}
 
-		$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
-		if(!empty($this->render)){
-			$view_url.=$this->render.".view";
-		}
-		else
-		{
-			$view_url.=Request::$params["action"].".view";
-		}
-		
+		$view_url=MK2_PATH_APP_RENDER.$renderName.".view";
+			
 		ob_start();
 		include($view_url);
 		$contents=ob_get_contents();
 		ob_end_clean();
 
 		return $contents;
+
 	}
 
 	# (protected) getPart

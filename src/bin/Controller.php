@@ -18,7 +18,6 @@ class Controller extends CoreBlock{
 
 	public $Template=false;
 	public $autoRender=true;
-	public $__view_output=array();
 
 	# _settings
 
@@ -67,9 +66,31 @@ class Controller extends CoreBlock{
 
 	}
 
-	# (protected) View values set
+	# (protected) getRender
 
-	protected function set($name,$value){
-		$this->__view_output[$name]=$value;
+	protected function getRender($renderName=null){
+
+		//set Template
+		if(!empty($this->__view_output)){
+			foreach($this->__view_output as $key=>$o_){
+				$$key=$o_;
+			}
+		}
+
+		$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+		if(!empty($this->render)){
+			$view_url.=$this->render.".view";
+		}
+		else
+		{
+			$view_url.=Request::$params["action"].".view";
+		}
+			
+		ob_start();
+		include($view_url);
+		$contents=ob_get_contents();
+		ob_end_clean();
+
+		return $contents;
 	}
 }
