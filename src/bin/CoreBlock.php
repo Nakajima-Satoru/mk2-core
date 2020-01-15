@@ -360,7 +360,7 @@ trait traitCoreBlock{
 			}
 		}
 
-		$view_url=MK2_PATH_APP_RENDER.$renderName.".view";
+		$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
 			
 		ob_start();
 		include($view_url);
@@ -382,7 +382,7 @@ trait traitCoreBlock{
 			}
 		}
 
-		$part_url=MK2_PATH_APP_VIEWPART.$name.".view";
+		$part_url=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
 
 		ob_start();
 		include($part_url);
@@ -398,11 +398,11 @@ trait traitCoreBlock{
 
 		$path=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 		if($name){
-			$path.=$name.".view";
+			$path.=$name.MK2_RENDERING_EXTENSION;
 		}
 		else
 		{
-			$path.=$this->render.".view";
+			$path.=$this->render.MK2_RENDERING_EXTENSION;
 		}
 
 		if(file_exists($path)){
@@ -419,7 +419,7 @@ trait traitCoreBlock{
 
 	protected function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APP_VIEWPART.$name.".view")){
+		if(file_exists(MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION)){
 			return true;
 		}
 		else
@@ -435,11 +435,11 @@ trait traitCoreBlock{
 
 		$path=MK2_PATH_APP_TEMPLATE;
 		if($name){
-			$path.=$name.".view";
+			$path.=$name.MK2_RENDERING_EXTENSION;
 		}
 		else
 		{
-			$path.=$this->layout.".view";
+			$path.=$this->layout.MK2_RENDERING_EXTENSION;
 		}
 
 		if(file_exists($path)){

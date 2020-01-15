@@ -79,11 +79,11 @@ class Controller extends CoreBlock{
 
 		$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 		if(!empty($this->render)){
-			$view_url.=$this->render.".view";
+			$view_url.=$this->render.MK2_RENDERING_EXTENSION;
 		}
 		else
 		{
-			$view_url.=Request::$params["action"].".view";
+			$view_url.=Request::$params["action"].MK2_RENDERING_EXTENSION;
 		}
 			
 		ob_start();
@@ -93,4 +93,21 @@ class Controller extends CoreBlock{
 
 		return $contents;
 	}
+
+	# (protected) getRenderPath
+
+	protected function getRenderPath(){
+		
+		$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+		if(!empty($this->render)){
+			$view_url.=$this->render.MK2_RENDERING_EXTENSION;
+		}
+		else
+		{
+			$view_url.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+		}
+		return $view_url;
+
+	}
+	
 }

@@ -43,7 +43,7 @@ class Render{
 
 		if($this->Template){
 
-			$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.".view";
+			$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.MK2_RENDERING_EXTENSION;
 			include($template_url);
 
 		}
@@ -53,11 +53,11 @@ class Render{
 			$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 
 			if(!empty($this->render)){
-				$renderUrl.=$this->render.".view";
+				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
 			}
 			else
 			{
-				$renderUrl.=Request::$params["action"].".view";
+				$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
 			}
 
 			if(!empty(file_exists($renderUrl))){
@@ -200,11 +200,11 @@ class Render{
 		$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 
 		if(!empty($this->render)){
-			$renderUrl.=$this->render.".view";
+			$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
 		}
 		else
 		{
-			$renderUrl.=Request::$params["action"].".view";
+			$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
 		}
 
 		if($oBuff){
@@ -220,7 +220,9 @@ class Render{
 		}
 
 	}
-	//(protected) getViewPart
+
+	# (protected) getViewPart
+	
 	protected function getViewPart($name,$oBuff=false){
 
 		//set layout
@@ -230,7 +232,7 @@ class Render{
 			}
 		}
 
-		$partUrl=MK2_PATH_APP_VIEWPART.$name.".view";
+		$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
 
 		if($oBuff){
 			ob_start();
@@ -250,7 +252,7 @@ class Render{
 
 	protected function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APP_VIEWPART.$name.".view")){
+		if(file_exists(MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION)){
 			return true;
 		}
 		else
@@ -258,4 +260,5 @@ class Render{
 			return false;
 		}
 	}
+
 }
