@@ -44,7 +44,17 @@ class Table extends Orm{
 				$this->{$key}=$o_;
 			}
 		}
-		
+
+		// if table name not existed, auto create table name.
+		if(empty($this->table)){
+			$tableName=get_class($this);
+			$tableName=explode("\\",$tableName);
+			$tableName=$tableName[count($tableName)-1];
+			$tLenCount=strrpos($tableName,"Table");
+			$tableName=substr($tableName,0,$tLenCount);
+			$this->table=strtolower($tableName);
+		}
+
 		parent::__construct($this->table,$this->dbName);
 
 	}
@@ -71,8 +81,9 @@ class Table extends Orm{
 
 	public function changeDbTable($tableName){
 		
-		$this->__construct($tableName);
-
+		$this->table=$tableName;
+		$this->_settingsModel();
+		
 		return $this;
 	}
 
