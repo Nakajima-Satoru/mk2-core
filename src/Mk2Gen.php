@@ -75,10 +75,18 @@ class Mk2Gen{
 		if(!defined('MK2_NAMESPACE')){
 			define('MK2_NAMESPACE','mk2\core');
 		}		
-		if(!defined('MK2_PATH_CONF')){
-			define("MK2_PATH_CONF",MK2_PATH_APP."AppConf/config.php");
+		if(!defined('MK2_PATH_APPCONF')){
+			define("MK2_PATH_APPCONF",MK2_PATH_APP."AppConf/");
 		}
-
+		if(!defined('MK2_PATH_APPCONFINIT')){
+			define("MK2_PATH_APPCONFINIT",MK2_PATH_APP."AppConf/Init/");
+		}
+		if(!defined('MK2_PATH_WEB')){
+			define("MK2_PATH_WEB",MK2_PATH_APP."Web/");
+		}
+		if(!defined('MK2_PATH_CONF')){
+			define("MK2_PATH_CONF",MK2_PATH_APPCONF."config.php");
+		}
 		if(!defined('MK2_PATH_BACKEND')){
 			define("MK2_PATH_BACKEND","Backend");
 		}

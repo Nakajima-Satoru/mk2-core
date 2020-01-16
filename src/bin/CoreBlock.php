@@ -162,6 +162,18 @@ trait traitCoreBlock{
 				$option=$p_;
 			}
 
+			# If Initialize file existe. Initialize data on marge.
+			if(empty($option["_independent"])){
+				$initPath=MK2_PATH_APPCONFINIT.$className.$classType."Init.php";
+				if(file_exists($initPath)){
+					$init=include_once($initPath);
+					$option=array_merge($option,$init);
+				}
+			}
+			else{
+				unset($option["_independent"]);
+			}
+
 			$jugement=false;
 			foreach($allowPathList as $m_){
 
@@ -207,7 +219,7 @@ trait traitCoreBlock{
 						$this->{$classType}=new \stdClass();
 					}
 
-					$this->{$classType}->{$className}=new $path($option);;
+					$this->{$classType}->{$className}=new $path($option);
 
 					if($classType=="Table"){
 						$this->Table->{$className}->_settingsModel();
