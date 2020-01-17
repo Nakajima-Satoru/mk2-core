@@ -166,7 +166,7 @@ trait traitCoreBlock{
 			if(empty($option["_independent"])){
 				$initPath=MK2_PATH_APPCONFINIT.$className.$classType."Init.php";
 				if(file_exists($initPath)){
-					$init=include_once($initPath);
+					$init=include($initPath);
 					$option=array_merge($option,$init);
 				}
 			}
