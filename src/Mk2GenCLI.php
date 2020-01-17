@@ -37,8 +37,8 @@ class Mk2GenCLI{
 	# (private) setConst
 	private function setConst(){
 
-		if(!defined('SYSNAME')){
-			define("SYSNAME","AP1");
+		if(!defined('MK2_SYSNAME')){
+			define("MK2_SYSNAME","AP1");
 		}
 		if(!defined('MK2_ROOT_LEVEL')){
 			define("MK2_ROOT_LEVEL",1);
@@ -50,13 +50,22 @@ class Mk2GenCLI{
 			define("MK2_PATH_VENDOR",MK2_PATH_ROOTREVERSE."../../vendor/");
 		}
 		if(!defined('MK2_PATH_APP')){
-			define("MK2_PATH_APP",MK2_PATH_ROOTREVERSE."../../apps/".SYSNAME."/");
+			define("MK2_PATH_APP",MK2_PATH_ROOTREVERSE."../../apps/".MK2_SYSNAME."/");
 		}
 		if(!defined('MK2_NAMESPACE')){
 			define('MK2_NAMESPACE','mk2\core');
-		}		
+		}
+		if(!defined('MK2_PATH_APPCONF')){
+			define("MK2_PATH_APPCONF",MK2_PATH_APP."AppConf/");
+		}
+		if(!defined('MK2_PATH_APPCONFINIT')){
+			define("MK2_PATH_APPCONFINIT",MK2_PATH_APPCONF."Init/");
+		}
+		if(!defined('MK2_PATH_WEB')){
+			define("MK2_PATH_WEB",MK2_PATH_APP."Web/");
+		}
 		if(!defined('MK2_PATH_CONF')){
-			define("MK2_PATH_CONF",MK2_PATH_APP."AppConf/config.php");
+			define("MK2_PATH_CONF",MK2_PATH_APPCONF."config.php");
 		}
 		if(!defined('MK2_PATH_BACKEND')){
 			define("MK2_PATH_BACKEND","Backend");

@@ -79,7 +79,7 @@ class Mk2Gen{
 			define("MK2_PATH_APPCONF",MK2_PATH_APP."AppConf/");
 		}
 		if(!defined('MK2_PATH_APPCONFINIT')){
-			define("MK2_PATH_APPCONFINIT",MK2_PATH_APP."AppConf/Init/");
+			define("MK2_PATH_APPCONFINIT",MK2_PATH_APPCONF."Init/");
 		}
 		if(!defined('MK2_PATH_WEB')){
 			define("MK2_PATH_WEB",MK2_PATH_APP."Web/");
