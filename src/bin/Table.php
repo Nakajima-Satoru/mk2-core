@@ -101,7 +101,7 @@ class Table extends Orm{
 
 			if(!empty($params["hasMany"])){
 
-				$this->setModel($params["hasMany"]);
+				$this->setTable($params["hasMany"]);
 
 				foreach($params["hasMany"] as $key=>$p_){
 
@@ -117,7 +117,7 @@ class Table extends Orm{
 						$p_["model"]=$key;
 					}
 
-					$p_["opject"]=$this->{$modelName};
+					$p_["opject"]=$this->Table->{$modelName};
 
 					$setParams["hasMany"][$modelName]=$p_;
 
@@ -127,7 +127,7 @@ class Table extends Orm{
 
 			if(!empty($params["hasOne"])){
 
-				$this->setModel($params["hasOne"]);
+				$this->setTable($params["hasOne"]);
 
 				foreach($params["hasOne"] as $key=>$p_){
 
@@ -143,7 +143,7 @@ class Table extends Orm{
 						$p_["model"]=$key;
 					}
 
-					$p_["opject"]=$this->{$modelName};
+					$p_["opject"]=$this->Table->{$modelName};
 
 					$setParams["hasOne"][$modelName]=$p_;
 
@@ -153,7 +153,7 @@ class Table extends Orm{
 
 			if(!empty($params["belongsTo"])){
 
-				$this->setModel($params["belongsTo"]);
+				$this->setTable($params["belongsTo"]);
 
 				foreach($params["belongsTo"] as $key=>$p_){
 
@@ -169,7 +169,7 @@ class Table extends Orm{
 						$p_["model"]=$key;
 					}
 
-					$p_["opject"]=$this->{$modelName};
+					$p_["opject"]=$this->Table->{$modelName};
 
 					$setParams["belongsTo"][$modelName]=$p_;
 
