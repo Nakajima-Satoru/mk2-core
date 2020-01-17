@@ -44,7 +44,7 @@ class Mk2GenCLI{
 			define("MK2_ROOT_LEVEL",1);
 		}
 		if(!defined('MK2_PATH_ROOTREVERSE')){
-			define("MK2_PATH_ROOTREVERSE","");
+			define("MK2_PATH_ROOTREVERSE","../");
 		}
 		if(!defined('MK2_PATH_VENDOR')){
 			define("MK2_PATH_VENDOR",MK2_PATH_ROOTREVERSE."../../vendor/");
