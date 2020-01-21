@@ -55,7 +55,7 @@ class Render{
 			}
 			else
 			{
-				$renderUrl=MK2_PATH_APP_RENDER."/";
+				$renderUrl=MK2_PATH_APP_RENDER;
 			}
 
 			if(!empty($this->render)){
