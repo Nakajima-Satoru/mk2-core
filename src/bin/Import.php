@@ -62,11 +62,18 @@ class Import{
 
 	}
 
+	# Import Render Class
+
+	public static function Render($name,$path=null){
+		self::_import("Render",$name,null,$path);
+
+	}
+
 	# Import Plugin	Library
 
 	public static function Plugin($path){
 
-		$plugin_path=MK2_PATH_APP."plugin/".$path;
+		$plugin_path=MK2_PATH_APP_PLUGIN.$path;
 
 		if(!empty(file_exists($plugin_path))){
 			include($plugin_path);

@@ -41,19 +41,13 @@ class Controller extends CoreBlock{
 		$use_class=Config::get("useClass");
 		if(!empty($use_class["Render"])){
 			if($this->autoRender){
-				$Render=new Render(array(
-					"__view_output"=>$this->__view_output,
-				));
 
-				# Set UI
-				if(!empty($this->PackerUI)){
-					$Render->UI=new \stdClass();
-					foreach($this->PackerUI as $key=>$opt){
-						$Render->UI->{$key}=$opt;
-					}
+				# set Render Class
+				$Render=$this->_setRender(Request::$params["controller"]);
+
+				if($Render){
+					$Render->rendering(@$this->Template,@$this->render);
 				}
-
-				$Render->rendering(@$this->Template,@$this->render);
 
 			}
 		}
@@ -68,30 +62,69 @@ class Controller extends CoreBlock{
 
 	# (protected) getRender
 
-	protected function getRender($renderName=null){
+	protected function getRender($renderName=null,$renderClassName=null,$controllerName=null){
 
-		//set Template
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
+		if(!$renderName){
+			if(!empty($this->render)){
+				$renderName=$this->render;
+			}
+			else
+			{
+				$renderName=Request::$params["action"];
 			}
 		}
+		if(!$renderClassName){
+			$renderClassName=Request::$params["controller"];
+		}
+		if(!$controllerName){
+			$controllerName=Request::$params["controller"];
+		}
+		
+		return parent::getRender($renderName,$renderClassName,$controllerName);
 
-		$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
-		if(!empty($this->render)){
-			$view_url.=$this->render.MK2_RENDERING_EXTENSION;
+		/*
+		# Render Class Exist Check..
+		if(class_exists("mk2\\core\\Render")){
+
+			# set Render Class
+			$Render=$this->_setRender();
+
+			ob_start();
+			$Render->rendering(null,$renderName);
+			$contents=ob_get_contents();
+			ob_end_clean();
+
+			return $contents;
+
 		}
 		else
 		{
-			$view_url.=Request::$params["action"].MK2_RENDERING_EXTENSION;
-		}
-			
-		ob_start();
-		include($view_url);
-		$contents=ob_get_contents();
-		ob_end_clean();
 
-		return $contents;
+			//set Template
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
+			}
+
+			$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+			if(!empty($this->render)){
+				$view_url.=$this->render.MK2_RENDERING_EXTENSION;
+			}
+			else
+			{
+				$view_url.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+			}
+			
+			ob_start();
+			include($view_url);
+			$contents=ob_get_contents();
+			ob_end_clean();
+
+			return $contents;
+
+		}
+		*/
 	}
 
 	# (protected) getRenderPath
@@ -109,5 +142,5 @@ class Controller extends CoreBlock{
 		return $view_url;
 
 	}
-	
+
 }

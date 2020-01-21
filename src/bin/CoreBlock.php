@@ -363,23 +363,42 @@ trait traitCoreBlock{
 
 	# (protected) getRender
 
-	protected function getRender($renderName){
+	protected function getRender($renderName=null,$renderClassName=null,$controllerName=null){
 
-		//set Template
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
-			}
+		# Render Class Exist Check..
+		if(class_exists("mk2\\core\\Render")){
+
+			# set Render Class
+			$Render=$this->_setRender($renderClassName);
+
+			ob_start();
+			$Render->rendering(null,$renderName,$controllerName);
+			$contents=ob_get_contents();
+			ob_end_clean();
+
+			return $contents;
+
 		}
+		else
+		{
 
-		$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
-			
-		ob_start();
-		include($view_url);
-		$contents=ob_get_contents();
-		ob_end_clean();
+			//set Template
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
+			}
 
-		return $contents;
+			$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
+				
+			ob_start();
+			include($view_url);
+			$contents=ob_get_contents();
+			ob_end_clean();
+
+			return $contents;
+
+		}
 
 	}
 
@@ -462,6 +481,52 @@ trait traitCoreBlock{
 			return false;
 		}
 
+	}
+
+	# (protected) _setRender
+
+	protected function _setRender($renderClassName=null){
+
+		$renderUrl=null;
+		if($renderClassName){
+			$className=ucfirst($renderClassName);
+			$renderUrl=MK2_PATH_APP_RENDER.ucfirst($className)."Render.php";
+		}
+	
+		if(file_exists($renderUrl)){
+
+			include($renderUrl);
+
+			$renderClassName=MK2_NAMESPACE."\\".ucfirst($className)."Render";
+	
+			if(!class_exists($renderClassName)){
+				$renderClassName="mk2\core\\".ucfirst($className)."Render";
+			}
+			if(!class_exists($renderClassName)){
+				$renderClassName=ucfirst($className)."Render";
+			}
+
+			$Render=new $renderClassName(array(
+				"__view_output"=>$this->__view_output,
+			));
+		}
+		else
+		{
+			$Render=new Render(array(
+				"__view_output"=>$this->__view_output,
+			));	
+		}
+	
+		# Set UI
+		if(!empty($this->PackerUI)){
+			$Render->UI=new \stdClass();
+			foreach($this->PackerUI as $key=>$opt){
+				$Render->UI->{$key}=$opt;
+			}
+		}
+	
+		return $Render;
+			
 	}
 }
 class CoreBlock{

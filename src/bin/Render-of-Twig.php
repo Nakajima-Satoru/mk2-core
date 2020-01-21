@@ -32,7 +32,7 @@ class Render{
 	}
 
 	//rendering
-	public function rendering($template,$render){
+	public function rendering($template=null,$render=null,$controllerName=null){
 
 		$this->Template=$template;
 		$this->render=$render;
@@ -56,7 +56,15 @@ class Render{
 		else
 		{
 
-			$renderUrl=ucfirst(Request::$params["controller"])."/";
+			//$renderUrl=ucfirst(Request::$params["controller"])."/";
+
+			if($controllerName){
+				$renderUrl=ucfirst($controllerName)."/";
+			}
+			else
+			{
+				$renderUrl="";
+			}
 
 			if(!empty($this->render)){
 				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
@@ -77,7 +85,7 @@ class Render{
 				$setData=$this->__view_output;
 				$setData["this"]=$this;
 
-				$this->Twig->render($renderUrl,$setData);
+				echo $Twig->render($renderUrl,$setData);
 	
 			}
 			else

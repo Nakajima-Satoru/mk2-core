@@ -123,6 +123,9 @@ class Mk2Gen{
 		if(!defined("MK2_PATH_APP_VIEWPART")){
 			define("MK2_PATH_APP_VIEWPART",MK2_PATH_APP.MK2_PATH_RENDERING."/ViewPart/");
 		}
+		if(!defined("MK2_PATH_APP_PLUGIN")){
+			define("MK2_PATH_APP_PLUGIN",MK2_PATH_APP.MK2_PATH_RENDERING."/plugin/");
+		}
 		if(!defined("MK2_RENDERING_EXTENSION")){
 			define("MK2_RENDERING_EXTENSION",".view");
 		}

@@ -100,6 +100,9 @@ class Mk2GenCLI{
 		if(!defined("MK2_PATH_APP_TEMPLATE")){
 			define("MK2_PATH_APP_TEMPLATE",MK2_PATH_APP.MK2_PATH_RENDERING."/Template/");
 		}
+		if(!defined("MK2_PATH_APP_PLUGIN")){
+			define("MK2_PATH_APP_PLUGIN",MK2_PATH_APP.MK2_PATH_RENDERING."/plugin/");
+		}
 		if(!defined("MK2_PATH_APP_VIEWPART")){
 			define("MK2_PATH_APP_VIEWPART",MK2_PATH_APP.MK2_PATH_RENDERING."/ViewPart/");
 		}

@@ -30,7 +30,7 @@ class Render{
 	}
 
 	//rendering
-	public function rendering($template,$render){
+	public function rendering($template=null,$render=null,$controllerName=null){
 
 		$this->Template=$template;
 		$this->render=$render;
@@ -50,7 +50,13 @@ class Render{
 		else
 		{
 
-			$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+			if($controllerName){
+				$renderUrl=MK2_PATH_APP_RENDER.ucfirst($controllerName)."/";
+			}
+			else
+			{
+				$renderUrl=MK2_PATH_APP_RENDER."/";
+			}
 
 			if(!empty($this->render)){
 				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
@@ -196,7 +202,7 @@ class Render{
 				$$key=$o_;
 			}
 		}
-
+		
 		$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
 
 		if(!empty($this->render)){
