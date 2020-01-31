@@ -355,6 +355,14 @@ trait traitCoreBlock{
 
 	}
 
+	# (protected) gotoError
+
+	protected function gotoError(){
+
+		http_response_code(404);
+		throw new \Exception("not found page.");
+	}
+
 	# (protected) View values set
 
 	protected function set($name,$value){
