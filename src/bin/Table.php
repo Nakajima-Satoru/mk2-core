@@ -1,15 +1,15 @@
 <?php
 
-/*
-
-mk2 |  Table
-
-Class for performing database management.
-Please put the business logic not in here but in the higher class Model class.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * mk2 Table Class
+ * 
+ * Class for performing database management.
+ * Please put the business logic not in here but in the higher class Model class.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 
@@ -20,7 +20,7 @@ use mk2\orm\OrmDo;
 try{
 
 	if(!empty(Config::get("database"))){
-		OrmDo::setDo(Config::get("database"));
+		OrmDo::setSchema(Config::get("database"));
 	}
 
 }catch(\Exception $e){
@@ -37,6 +37,14 @@ class Table extends Orm{
 	
 
 	public function __construct($option=[]){
+
+		if(!empty($option["setSchema"])){
+			$PdoDriveName=hash("sha256",json_encode($option["setSchema"]));
+			OrmDo::setSchemaAdd($PdoDriveName,$option["setSchema"]);
+			$this->dbName=$PdoDriveName;
+			$this->PdoDriveName=$PdoDriveName;
+			unset($option["setSchema"]);
+		}
 
 		# option setting
 		if(!empty($option)){
