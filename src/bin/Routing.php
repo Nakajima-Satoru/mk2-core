@@ -32,11 +32,10 @@ class Routing{
 			if(!empty($params["pages"])){
 				foreach($params["pages"] as $aliasName=>$p_){
 					foreach($p_ as $url=>$pp_){
+						if($url=="/"){ $url=""; }
 						$url=$aliasName.$url;
 						$params["pages"][$url]=$pp_;
 					}
-
-					unset($params["pages"][$aliasName]);
 				}
 			}
 		}
