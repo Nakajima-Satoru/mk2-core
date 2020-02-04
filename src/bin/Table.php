@@ -99,93 +99,17 @@ class Table extends Orm{
 
 	public function associate($params=[]){
 
-		$setParams=[
-			"hasMany"=>[],
-			"hasOne"=>[],
-			"belongsTo"=>[],
-		];
-
 		if(!empty($params)){
 
 			if(!empty($params["hasMany"])){
-
-				$this->setTable($params["hasMany"]);
-
-				foreach($params["hasMany"] as $key=>$p_){
-
-					if(is_int($key)){
-						$modelName=$p_;
-						$p_=[
-							"model"=>$p_,
-						];
-					}
-					else
-					{
-						$modelName=$key;
-						$p_["model"]=$key;
-					}
-
-					$p_["opject"]=$this->Table->{$modelName};
-
-					$setParams["hasMany"][$modelName]=$p_;
-
-				}
-
+				$this->hasMany($params["hasMany"]);
 			}
-
 			if(!empty($params["hasOne"])){
-
-				$this->setTable($params["hasOne"]);
-
-				foreach($params["hasOne"] as $key=>$p_){
-
-					if(is_int($key)){
-						$modelName=$p_;
-						$p_=[
-							"model"=>$p_,
-						];
-					}
-					else
-					{
-						$modelName=$key;
-						$p_["model"]=$key;
-					}
-
-					$p_["opject"]=$this->Table->{$modelName};
-
-					$setParams["hasOne"][$modelName]=$p_;
-
-				}
-
+				$this->hasOne($params["hasOne"]);
 			}
-
 			if(!empty($params["belongsTo"])){
-
-				$this->setTable($params["belongsTo"]);
-
-				foreach($params["belongsTo"] as $key=>$p_){
-
-					if(is_int($key)){
-						$modelName=$p_;
-						$p_=[
-							"model"=>$p_,
-						];
-					}
-					else
-					{
-						$modelName=$key;
-						$p_["model"]=$key;
-					}
-
-					$p_["opject"]=$this->Table->{$modelName};
-
-					$setParams["belongsTo"][$modelName]=$p_;
-
-				}
+				$this->belongsTo($params["belongsTo"]);
 			}
-
-			$this->associate=$setParams;
-
 		}
 		else
 		{
@@ -196,4 +120,117 @@ class Table extends Orm{
 
 	}
 
+	/**
+	 * hasMany
+	 */
+	public function hasMany($params=[]){
+
+		if(!empty($params)){
+
+			$setParams=[];
+
+			$this->setTable($params);
+
+			foreach($params as $key=>$p_){
+	
+				if(is_int($key)){
+					$modelName=$p_;
+					$p_=[
+						"model"=>$p_,
+					];
+				}
+				else
+				{
+					$modelName=$key;
+					$p_["model"]=$key;
+				}
+	
+				$p_["opject"]=$this->Table->{$modelName};
+	
+				$setParams[$modelName]=$p_;
+	
+			}
+
+			$this->associate["hasMany"]=$setParams;
+
+		}
+
+		return $this;
+	}
+
+	/**
+	 * hasOne
+	 */
+	public function hasOne($params=[]){
+
+		if(!empty($params)){
+
+			$setParams=[];
+
+			$this->setTable($params);
+
+			foreach($params as $key=>$p_){
+
+				if(is_int($key)){
+					$modelName=$p_;
+					$p_=[
+						"model"=>$p_,
+					];
+				}
+				else
+				{
+					$modelName=$key;
+					$p_["model"]=$key;
+				}
+
+				$p_["opject"]=$this->Table->{$modelName};
+
+				$setParams[$modelName]=$p_;
+
+			}
+
+			$this->associate["hasOne"]=$setParams;
+
+		}
+
+		return $this;
+	}
+
+	/**
+	 * belongsTo
+	 */
+	public function belongsTo($params=[]){
+
+		if(!empty($params)){
+
+			$setParams=[];
+
+			$this->setTable($params);
+
+			foreach($params as $key=>$p_){
+
+				if(is_int($key)){
+					$modelName=$p_;
+					$p_=[
+						"model"=>$p_,
+					];
+				}
+				else
+				{
+					$modelName=$key;
+					$p_["model"]=$key;
+				}
+
+				$p_["opject"]=$this->Table->{$modelName};
+
+				$setParams[$modelName]=$p_;
+
+			}
+
+			$this->associate["belongsTo"]=$setParams;
+
+		}
+
+		return $this;
+	}
 }
