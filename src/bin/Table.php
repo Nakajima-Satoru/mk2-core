@@ -38,6 +38,13 @@ class Table extends Orm{
 
 	public function __construct($option=[]){
 
+		if(empty($option["setSchema"])){
+			if(!empty($this->setSchema)){
+				$option["setSchema"]=$this->setSchema;
+				unset($this->setSchema);
+			}
+		}
+
 		if(!empty($option["setSchema"])){
 			$PdoDriveName=hash("sha256",json_encode($option["setSchema"]));
 			OrmDo::setSchemaAdd($PdoDriveName,$option["setSchema"]);
