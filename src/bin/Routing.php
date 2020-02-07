@@ -30,7 +30,12 @@ class Routing{
 		# scope on convert
 		if(!empty($params["scope"])){
 			if(!empty($params["pages"])){
-				foreach($params["pages"] as $aliasName=>$p_){
+
+				$pagesList=$params["pages"];
+				$params["pages"]=[];
+		
+				foreach($pagesList as $aliasName=>$p_){
+					if($aliasName=="/"){ $aliasName=""; }
 					foreach($p_ as $url=>$pp_){
 						if($url=="/"){ $url=""; }
 						$url=$aliasName.$url;
@@ -56,7 +61,6 @@ class Routing{
 		}
 
 		$this->routes=$params;
-
 		return $this;
 	}
 
