@@ -15,6 +15,7 @@ namespace mk2\core;
 class Render{
 
 	public $__view_output=[];
+	public $renderBase=null;
 
 	public function __construct($params=array()){
 
@@ -59,11 +60,21 @@ class Render{
 			}
 
 			if(!empty($this->render)){
-				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderbase.$this->render.MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				}
 			}
 			else
 			{
-				$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
 			}
 
 			if(!empty(file_exists($renderUrl))){
@@ -204,13 +215,23 @@ class Render{
 		}
 		
 		$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
-
 		if(!empty($this->render)){
-			$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+			if(!empty($this->renderBase)){
+				$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+			}
+			else
+			{
+				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+			}
 		}
 		else
 		{
-			$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+			if(!empty($this->renderBase)){
+				$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+			}
 		}
 
 		if($oBuff){
@@ -238,7 +259,12 @@ class Render{
 			}
 		}
 
-		$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		if(!empty($this->renderBase)){
+			$partUrl=$this->renderBase.$name.MK2_RENDERING_EXTENSION;
+		}
+		else{
+			$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		}
 
 		if($oBuff){
 			ob_start();
@@ -258,7 +284,18 @@ class Render{
 
 	protected function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION)){
+		if(!empty($this->renderBase)){
+
+			$path=$this->renderBase.$name.MK2_RENDERING_EXTENSION;
+
+		}
+		else{
+
+			$path=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+
+		}
+
+		if(file_exists($path)){
 			return true;
 		}
 		else

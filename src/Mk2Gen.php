@@ -69,6 +69,9 @@ class Mk2Gen{
 		if(!defined('MK2_PATH_VENDOR')){
 			define("MK2_PATH_VENDOR",MK2_PATH_ROOTREVERSE."../../vendor/");
 		}
+		if(!defined('MK2_PATH_GLOBAL')){
+			define("MK2_PATH_GLOBAL",MK2_PATH_ROOTREVERSE."../../apps/");
+		}
 		if(!defined('MK2_PATH_APP')){
 			define("MK2_PATH_APP",MK2_PATH_ROOTREVERSE."../../apps/".SYSNAME."/");
 		}

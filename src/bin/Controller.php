@@ -18,6 +18,7 @@ class Controller extends CoreBlock{
 
 	public $Template=false;
 	public $autoRender=true;
+	public $renderBase=null;
 
 	# _settings
 
@@ -46,6 +47,7 @@ class Controller extends CoreBlock{
 				$Render=$this->_setRender(Request::$params["controller"]);
 
 				if($Render){
+					$Render->renderBase=$this->renderBase;
 					$Render->rendering(@$this->Template,@$this->render);
 				}
 
@@ -82,49 +84,6 @@ class Controller extends CoreBlock{
 		
 		return parent::getRender($renderName,$renderClassName,$controllerName);
 
-		/*
-		# Render Class Exist Check..
-		if(class_exists("mk2\\core\\Render")){
-
-			# set Render Class
-			$Render=$this->_setRender();
-
-			ob_start();
-			$Render->rendering(null,$renderName);
-			$contents=ob_get_contents();
-			ob_end_clean();
-
-			return $contents;
-
-		}
-		else
-		{
-
-			//set Template
-			if(!empty($this->__view_output)){
-				foreach($this->__view_output as $key=>$o_){
-					$$key=$o_;
-				}
-			}
-
-			$view_url=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
-			if(!empty($this->render)){
-				$view_url.=$this->render.MK2_RENDERING_EXTENSION;
-			}
-			else
-			{
-				$view_url.=Request::$params["action"].MK2_RENDERING_EXTENSION;
-			}
-			
-			ob_start();
-			include($view_url);
-			$contents=ob_get_contents();
-			ob_end_clean();
-
-			return $contents;
-
-		}
-		*/
 	}
 
 	# (protected) getRenderPath
