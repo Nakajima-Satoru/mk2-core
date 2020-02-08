@@ -12,6 +12,18 @@ Copylight (C) Nakajima Satoru 2020.
 
 namespace mk2\core;
 
+class StaticRoutingData{
+
+	private static $_routes=[];
+
+	public function set($routes){
+		self::$_routes=$routes;
+	}
+	public function get(){
+		return self::$_routes;
+	}
+}
+
 class Routing{
 
 	private $routes=[];
@@ -61,6 +73,9 @@ class Routing{
 		}
 
 		$this->routes=$params;
+
+		StaticRoutingData::set($params);
+		
 		return $this;
 	}
 
@@ -244,6 +259,10 @@ class Routing{
 			if($url=="/"){
 				$url="";
 			}
+
+			// global aregment set
+			$anyAregment="{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}/{:?}";
+			$url=str_replace("*",$anyAregment,$url);
 
 			$qa=$this->queryArea;
 
