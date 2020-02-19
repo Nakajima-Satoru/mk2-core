@@ -354,7 +354,7 @@ class Mk2Gen{
 		if(!$cont_url){
 
 			$errText=ucfirst(Request::$params["controller"]).'Controller.php" not Found.'."\n";
-			$errText.='Please check whether the file of the "'.ucfirst(Request::$params["controller"]).'_Controller.php" controller exists in the directory below or inheriting the "'.ucfirst(Request::$params["controller"]).'" class from Controller. '."\n\n";
+			$errText.='Please check whether the file of the "'.ucfirst(Request::$params["controller"]).'Controller.php" controller exists in the directory below or inheriting the "'.ucfirst(Request::$params["controller"]).'" class from Controller. '."\n\n";
 
 			http_response_code(404);
 			throw new \Exception($errText);
@@ -384,15 +384,25 @@ class Mk2Gen{
 		# filter before hook.
 		#$cont->filterBefore();
 
-		# Execution of action method.
-		if(!empty(Request::$params["request"])){
-			Request::$params["request"]=array_values(Request::$params["request"]);
-			$out=$cont->{Request::$params["action"]}(...Request::$params["request"]);
+		# If actionPass is true, the logic in the action method is ignored.
+		if(empty($cont->actionPass)){
+
+			# Execution of action method.
+			if(!empty(Request::$params["request"])){
+				Request::$params["request"]=array_values(Request::$params["request"]);
+				$out=$cont->{Request::$params["action"]}(...Request::$params["request"]);
+			}
+			else
+			{
+				$out=$cont->{Request::$params["action"]}();
+			}
+			
 		}
 		else
 		{
-			$out=$cont->{Request::$params["action"]}();
+			$out=null;
 		}
+
 
 		# rendering..
 		$cont->___rendering($out);

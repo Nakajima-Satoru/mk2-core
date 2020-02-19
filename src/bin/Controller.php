@@ -19,6 +19,7 @@ class Controller extends CoreBlock{
 	public $Template=false;
 	public $autoRender=true;
 	public $renderBase=null;
+	public $actionPass=false;
 
 	# _settings
 

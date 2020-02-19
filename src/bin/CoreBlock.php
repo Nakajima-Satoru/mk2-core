@@ -352,7 +352,8 @@ trait traitCoreBlock{
 		
 		$url=$this->getUrl($params);
 		header("Location: ".$url);
-
+		exit;
+		
 	}
 
 	# (protected) gotoError
