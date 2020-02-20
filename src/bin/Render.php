@@ -93,15 +93,15 @@ class Render{
 
 	}
 
-	# (protected) set
+	# set
 
 	public function set($name,$value){
 		$this->__view_output[$name]=$value;
 	}
 
-	# (protected) getUrl
+	# getUrl
 
-	protected function getUrl($params){
+	public function getUrl($params){
 
 		if(is_array($params)){
 
@@ -203,9 +203,9 @@ class Render{
 
 	}
 
-	# (protected) getRender
+	# getRender
 
-	protected function getRender($oBuff=false){
+	public function getRender($oBuff=false){
 
 		//set layout
 		if(!empty($this->__view_output)){
@@ -248,9 +248,9 @@ class Render{
 
 	}
 
-	# (protected) getViewPart
+	# getViewPart
 	
-	protected function getViewPart($name,$oBuff=false){
+	public function getViewPart($name,$oBuff=false){
 
 		//set layout
 		if(!empty($this->__view_output)){
@@ -280,9 +280,9 @@ class Render{
 
 	}
 
-	# (protected) existViewPart
+	# existViewPart
 
-	protected function existViewPart($name){
+	public function existViewPart($name){
 
 		if(!empty($this->renderBase)){
 
