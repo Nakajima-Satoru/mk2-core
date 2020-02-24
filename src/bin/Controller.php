@@ -20,6 +20,7 @@ class Controller extends CoreBlock{
 	public $autoRender=true;
 	public $renderBase=null;
 	public $actionPass=false;
+	public $renderClass=null;
 
 	# _settings
 
@@ -44,8 +45,12 @@ class Controller extends CoreBlock{
 		if(!empty($use_class["Render"])){
 			if($this->autoRender){
 
+				if(empty($this->renderClass)){
+					$this->renderClass=Request::$params["controller"];
+				}
+
 				# set Render Class
-				$Render=$this->_setRender(Request::$params["controller"]);
+				$Render=$this->_setRender($this->renderClass);
 
 				if($Render){
 					$Render->renderBase=$this->renderBase;

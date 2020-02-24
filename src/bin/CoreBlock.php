@@ -501,7 +501,7 @@ trait traitCoreBlock{
 			$className=ucfirst($renderClassName);
 			$renderUrl=MK2_PATH_APP_RENDER.ucfirst($className)."Render.php";
 		}
-	
+
 		if(file_exists($renderUrl)){
 
 			include($renderUrl);
