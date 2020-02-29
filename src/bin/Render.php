@@ -16,6 +16,7 @@ class Render{
 
 	public $__view_output=[];
 	public $renderBase=null;
+	public $renderBaseTemplate=null;
 
 	public function __construct($params=array()){
 
@@ -44,7 +45,13 @@ class Render{
 
 		if($this->Template){
 
-			$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.MK2_RENDERING_EXTENSION;
+			if(!empty($this->renderBaseTemplate)){
+				$template_url=$this->renderBaseTemplate.$this->Template.MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.MK2_RENDERING_EXTENSION;
+			}
+
 			include($template_url);
 
 		}

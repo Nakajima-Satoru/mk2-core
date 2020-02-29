@@ -21,6 +21,7 @@ class Controller extends CoreBlock{
 	public $renderBase=null;
 	public $actionPass=false;
 	public $renderClass=null;
+	public $renderBaseTemplate=null;
 
 	# _settings
 
@@ -54,6 +55,7 @@ class Controller extends CoreBlock{
 
 				if($Render){
 					$Render->renderBase=$this->renderBase;
+					$Render->renderBaseTemplate=$this->renderBaseTemplate;
 					$Render->rendering(@$this->Template,@$this->render);
 				}
 
