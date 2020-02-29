@@ -17,6 +17,7 @@ namespace mk2\core;
 trait traitCoreBlock{
 
 	public $__view_output=[];
+	public $renderBase=null;
 
 	# protected $_obj=[];
 
@@ -379,6 +380,7 @@ trait traitCoreBlock{
 
 			# set Render Class
 			$Render=$this->_setRender($renderClassName);
+			$Render->renderBase=$this->renderBase;
 
 			ob_start();
 			$Render->rendering(null,$renderName,$controllerName);
@@ -398,8 +400,14 @@ trait traitCoreBlock{
 				}
 			}
 
-			$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
-				
+			if(!empty($this->renderBase)){
+				$view_url=$this->renderBase.$renderName.MK2_RENDERING_EXTENSION;
+			}
+			else
+			{
+				$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
+			}
+
 			ob_start();
 			include($view_url);
 			$contents=ob_get_contents();
@@ -422,7 +430,14 @@ trait traitCoreBlock{
 			}
 		}
 
-		$part_url=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		if(!empty($this->renderBase)){
+			$part_url=$this->renderBase.$name.MK2_RENDERING_EXTENSION;
+		}
+		else
+		{
+			$part_url=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		}
+
 
 		ob_start();
 		include($part_url);

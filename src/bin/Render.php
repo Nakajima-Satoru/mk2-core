@@ -61,7 +61,7 @@ class Render{
 
 			if(!empty($this->render)){
 				if(!empty($this->renderBase)){
-					$renderUrl=$this->renderbase.$this->render.MK2_RENDERING_EXTENSION;
+					$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
 				}
 				else{
 					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
