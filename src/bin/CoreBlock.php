@@ -18,6 +18,7 @@ trait traitCoreBlock{
 
 	public $__view_output=[];
 	public $renderBase=null;
+	public $renderBaseViewPart=null;
 
 	# protected $_obj=[];
 
@@ -381,6 +382,7 @@ trait traitCoreBlock{
 			# set Render Class
 			$Render=$this->_setRender($renderClassName);
 			$Render->renderBase=$this->renderBase;
+			$Render->renderBaseViewPart=$this->renderBaseViewPart;
 
 			ob_start();
 			$Render->rendering(null,$renderName,$controllerName);
@@ -430,8 +432,8 @@ trait traitCoreBlock{
 			}
 		}
 
-		if(!empty($this->renderBase)){
-			$part_url=$this->renderBase.$name.MK2_RENDERING_EXTENSION;
+		if(!empty($this->renderBaseViewPart)){
+			$part_url=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
 		}
 		else
 		{
@@ -474,7 +476,14 @@ trait traitCoreBlock{
 
 	protected function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION)){
+		if(!empty($this->renderBaseViewPart)){
+			$path=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+		}
+		else{
+			$path=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		}
+
+		if(file_exists($path)){
 			return true;
 		}
 		else

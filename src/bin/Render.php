@@ -16,6 +16,7 @@ class Render{
 
 	public $__view_output=[];
 	public $renderBase=null;
+	public $renderBaseViewPart=null;
 	public $renderBaseTemplate=null;
 
 	public function __construct($params=array()){
@@ -266,8 +267,8 @@ class Render{
 			}
 		}
 
-		if(!empty($this->renderBase)){
-			$partUrl=$this->renderBase.$name.MK2_RENDERING_EXTENSION;
+		if(!empty($this->renderBaseViewPart)){
+			$partUrl=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
 		}
 		else{
 			$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
@@ -291,9 +292,9 @@ class Render{
 
 	public function existViewPart($name){
 
-		if(!empty($this->renderBase)){
+		if(!empty($this->renderBaseViewPart)){
 
-			$path=$this->renderBase.$name.MK2_RENDERING_EXTENSION;
+			$path=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
 
 		}
 		else{
