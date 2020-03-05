@@ -55,6 +55,7 @@ class Controller extends CoreBlock{
 
 				if($Render){
 					$Render->renderBase=$this->renderBase;
+					$Render->renderBaseViewPart=$this->renderBaseViewPart;
 					$Render->renderBaseTemplate=$this->renderBaseTemplate;
 					$Render->rendering(@$this->Template,@$this->render);
 				}
