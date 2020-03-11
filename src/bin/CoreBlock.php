@@ -187,7 +187,18 @@ trait traitCoreBlock{
 				}
 			}
 
-			if($jugement){
+			if(!$jugement){
+
+				if(empty($this->{$classType})){
+					$this->{$classType}=new \stdClass();
+				}
+
+				$defaultClassName="mk2\core\\".$classType;
+				$this->{$classType}->{$className}=new $defaultClassName();
+				
+			}
+			else
+			{
 				include_once($url);
 
 				# namespace check
