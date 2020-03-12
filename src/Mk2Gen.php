@@ -456,6 +456,10 @@ class Mk2Gen{
 
 	private function errorLogic($errMsg,$mode=null){
 
+		if(Config::get("debugMode")>=1){
+			$errMsg="An Internal Error Has Occurred.";
+		}
+		
 		if(http_response_code()==200){
 			http_response_code(500);
 		}
@@ -478,7 +482,7 @@ class Mk2Gen{
 			}
 			else
 			{
-				
+
 				echo $errMsg;
 	
 			}

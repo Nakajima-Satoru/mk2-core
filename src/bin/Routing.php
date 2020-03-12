@@ -116,7 +116,7 @@ class Routing{
 			$beforeRequest["controller"]=Request::$params["controller"];
 		}
 		if(!empty(Request::$params["action"])){
-				$beforeRequest["action"]=Request::$params["action"];
+			$beforeRequest["action"]=Request::$params["action"];
 		}
 		if(!empty(Request::$params["request"])){
 			$beforeRequest["request"]=Request::$params["request"];
@@ -124,6 +124,12 @@ class Routing{
 
 		if(!empty($this->routes["error"][$errCode])){
 			$errRoute=$this->routes["error"][$errCode];
+		}
+		else if(!empty($this->routes["error"][null])){
+			$errRoute=$this->routes["error"][null];
+		}
+		
+		if(!empty($errRoute)){
 
 			if(is_callable($errRoute)){
 
