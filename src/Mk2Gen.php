@@ -57,8 +57,8 @@ class Mk2Gen{
 	# (private) setConst
 	private function setConst(){
 
-		if(!defined('SYSNAME')){
-			define("SYSNAME","AP1");
+		if(!defined('MK2_SYSNAME')){
+			define("MK2_SYSNAME","AP1");
 		}
 		if(!defined('MK2_ROOT_LEVEL')){
 			define("MK2_ROOT_LEVEL",1);
@@ -73,7 +73,7 @@ class Mk2Gen{
 			define("MK2_PATH_GLOBAL",MK2_PATH_ROOTREVERSE."../../apps/");
 		}
 		if(!defined('MK2_PATH_APP')){
-			define("MK2_PATH_APP",MK2_PATH_ROOTREVERSE."../../apps/".SYSNAME."/");
+			define("MK2_PATH_APP",MK2_PATH_ROOTREVERSE."../../apps/".MK2_SYSNAME."/");
 		}
 		if(!defined('MK2_NAMESPACE')){
 			define('MK2_NAMESPACE','mk2\core');
