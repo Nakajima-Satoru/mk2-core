@@ -459,10 +459,6 @@ class Mk2Gen{
 		if(Config::get("debugMode")>=1){
 			$errMsg="An Internal Error Has Occurred.";
 		}
-		
-		if(http_response_code()==200){
-			http_response_code(500);
-		}
 
 		$this->Routing->error(http_response_code(),$errMsg);
 
