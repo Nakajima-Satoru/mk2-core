@@ -121,6 +121,9 @@ class Routing{
 		if(!empty(Request::$params["request"])){
 			$beforeRequest["request"]=Request::$params["request"];
 		}
+		if(!empty(Request::$params["namespace"])){
+			$beforeRequest["namespace"]=Request::$params["namespace"];
+		}
 
 		if(!empty($this->routes["error"][$errCode])){
 			$errRoute=$this->routes["error"][$errCode];
@@ -468,6 +471,24 @@ class Routing{
 			if(!empty($param[1])){
 				# type :controller
 				$buff["routeType"]="controller";
+
+				if(strpos($param[0],"\\")){
+					$param[0]=explode("\\",$param[0]);
+					$contBuff=$param[0][count($param[0])-1];
+					$namespace="";
+					for($u1=0;$u1<count($param[0])-1;$u1++){
+						if($u1!=0){
+							$namespace.="\\";
+						}
+						$namespace.=$param[0][$u1];
+					}
+					$buff["namespace"]=$namespace;
+					$param[0]=$contBuff;
+				}
+				else{
+					$buff["namespace"]="";
+				}
+
 				$buff["controller"]=$param[0];
 				$param[1]=explode(":",$param[1]);
 				$buff["action"]=$param[1][0];

@@ -12,6 +12,8 @@ Copylight(C) Nakajima Satoru 2020.
 
 namespace mk2\core;
 
+include_once("CoreBlockStatic.php");
+
 # Correspond with trait
 
 trait traitCoreBlock{
@@ -127,235 +129,33 @@ trait traitCoreBlock{
 
 	private function _addClassLoading($classType,$params,$addAllow=null){
 
-		$classPath=constant("MK2_PATH_APP_".strtoupper($classType));
-		
-		if(!is_array($params)){
-			$params=[$params];
-		}
+		$out=CoreBlockStatic::_addClassLoading($classType,$params,$addAllow);
 
-		# Set allow directory
-
-		$allow_dir=Config::get("allowDirectory");
-		$allowPathList=[
-			$classPath,
-		];
-		if(!empty($addAllow)){
-			foreach($addAllow as $a_){
-				$allowPathList[]=$a_;
+		foreach($out->{$classType} as $className=>$o_){
+			if(empty($this->{$classType})){
+				$this->{$classType}=new \stdClass();
 			}
+
+			$this->{$classType}->{$className}=$o_;
 		}
-		if(!empty($allow_dir[$classType])){
-			foreach($allow_dir[$classType] as $am){
-				$allowPathList[]=$classPath."/".$am."/";
+
+		if($classType=="Packer"){
+			foreach($out->PackerUI as $className=>$o_){
+				if(empty($this->PackerUI)){
+					$this->PackerUI=new \stdClass();
+				}
+	
+				$this->PackerUI->{$className}=$o_;
 			}
 		}
 
-		# serach class..
-
-		foreach($params as $key=>$p_){
-
-			$option=[];
-			if(is_int($key)){
-				$className=ucfirst($p_);
-			}
-			else
-			{
-				$className=ucfirst($key);
-				$option=$p_;
-			}
-
-			# If Initialize file existe. Initialize data on marge.
-			if(empty($option["_independent"])){
-				$initPath=MK2_PATH_APPCONFINIT.$className.$classType."Init.php";
-				if(file_exists($initPath)){
-					$init=include($initPath);
-					$option=array_merge($option,$init);
-				}
-			}
-			else{
-				unset($option["_independent"]);
-			}
-
-			$jugement=false;
-			foreach($allowPathList as $m_){
-
-				$url=$m_.$className.$classType.".php";
-
-				if(!empty(file_exists($url))){
-					$jugement=true;
-					break;
-				}
-			}
-
-			if(!$jugement){
-
-				if(empty($this->{$classType})){
-					$this->{$classType}=new \stdClass();
-				}
-
-				$defaultClassName="mk2\core\\".$classType;
-				$this->{$classType}->{$className}=new $defaultClassName();
-				
-			}
-			else
-			{
-				include_once($url);
-
-				# namespace check
-
-				$path=MK2_NAMESPACE."\\".$className.$classType;
-
-				if(!class_exists($path)){
-					$path="mk2\core\\".$className.$classType;
-				}
-				if(!class_exists($path)){
-					$path=$className.$classType;
-				}
-
-				if($classType=="Packer"){
-
-					$classNameUseView=$className."UI";
-
-					$pathUseView=MK2_NAMESPACE."\\".$className.$classType."UI";
-
-					if(!class_exists($pathUseView)){
-						$pathUseView="mk2\core\\".$className.$classType."UI";
-					}
-					if(!class_exists($pathUseView)){
-						$pathUseView=$className.$classType."UI";
-					}
-				}
-
-				if(class_exists($path)){
-
-					if(empty($this->{$classType})){
-						$this->{$classType}=new \stdClass();
-					}
-
-					$this->{$classType}->{$className}=new $path($option);
-
-					if($classType=="Table"){
-						$this->Table->{$className}->_settingsModel();
-					}
-				}
-
-				if($classType=="Packer"){
-
-					if(class_exists($pathUseView)){
-
-						if(empty($this->PackerUI)){
-							$this->PackerUI=new \stdClass();
-						}
-						$classNameUseView=substr($classNameUseView,0,-2);
-						$this->PackerUI->{$classNameUseView}=new $pathUseView($option);
-
-					}
-				}
-			}
-		}
 	}
 
 	# (protected) getUrl
 
 	protected function getUrl($params){
 
-		if(is_array($params)){
-
-			$urla="";
-
-			if(!empty($params["head"])){
-				$urla.=$params["head"]."/";
-				unset($params["head"]);
-			}
-
-			if(empty($params["controller"])){
-				$params["controller"]=Request::$params["controller"];
-			}
-
-			if(empty($params["action"]) || @$params["action"]=="index"){
-				$params["action"]="";
-			}
-
-			$urla.=$params["controller"];
-
-			if($params["action"]){
-				$action=$params["action"];
-				$urla.="/".$action;
-			}
-
-			//get
-			if(!empty($params["?"])){
-				$get_params=$params["?"];
-			}
-
-			//hash
-			if(!empty($params["#"])){
-				$hash=$params["#"];
-			}
-
-			unset(
-				$params["controller"],
-				$params["action"],
-				$params["?"],
-				$params["#"]
-			);
-
-			if(!empty($params)){
-				if(empty($action)){
-					$urla.="/index";
-				}
-
-				foreach($params as $tq_){
-					$urla.="/".$tq_;
-				}
-			}
-
-			if(!empty($get_params)){
-				if(is_array($get_params)){
-					$get_str="?";
-					$ind=0;
-					foreach($get_params as $key=>$g_){
-						if($ind>0){
-							$get_str.="&";
-						}
-						$get_str.=$key."=".$g_;
-						$ind++;
-					}
-				}
-				else
-				{
-					$get_str="?".$get_params;
-				}
-				$urla.=$get_str;
-			}
-			if(!empty($hash)){
-				$urla.="#".$hash;
-			}
-
-			//unset(memory suppression)
-			unset($action);
-			unset($get_params);
-			unset($params);
-
-			return Request::$params["root"].$urla;
-
-		}
-		else
-		{
-			if($params=="/"){
-				return Request::$params["root"];
-			}
-			else
-			{
-				if($params[0]=="@"){
-					return Request::$params["root"].substr($params,1);
-				}
-				else
-				{
-					return $params;
-				}
-			}
-		}
+		return CoreBlockStatic::_getUrl($params);
 
 	}
 

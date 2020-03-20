@@ -178,30 +178,29 @@ class Mk2Gen{
 
 		$cont_jugement=false;
 
+		$enable_cont_urls=[];
+
 		$cont_url=MK2_PATH_APP_CONTROLLER.ucfirst(Request::$params["controller"])."Controller.php";
 
 		if(!empty(file_exists($cont_url))){
-			$cont_jugement=true;
+			$enable_cont_urls[]=$cont_url;
 		}
-		else
-		{
-			if(Config::get("allowDirectory")){
-				$allow_dir=Config::get("allowDirectory");
 
-				if(!empty($allow_dir["Controller"])){
-					foreach($allow_dir["Controller"] as $a_){
-						$cont_url=MK2_PATH_APP_CONTROLLER.$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
-						if(!empty(file_exists($cont_url))){
-							$cont_jugement=true;
-							break;
-						}
+		if(Config::get("allowDirectory")){
+			$allow_dir=Config::get("allowDirectory");
+
+			if(!empty($allow_dir["Controller"])){
+				foreach($allow_dir["Controller"] as $a_){
+					$cont_url=MK2_PATH_APP_CONTROLLER.$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
+					if(!empty(file_exists($cont_url))){
+						$enable_cont_urls[]=$cont_url;
 					}
 				}
 			}
 		}
-
-		if($cont_jugement){
-			return $cont_url;
+	
+		if($enable_cont_urls){
+			return $enable_cont_urls;
 		}
 		else
 		{
@@ -272,10 +271,10 @@ class Mk2Gen{
 	private function setController(){
 
 		# Controller File Exist Check
-		$cont_url=$this->controllerCheckExisted();
+		$enable_cont_urls=$this->controllerCheckExisted();
 
 		# if controller enabled jugement not empty, output error message.
-		if(!$cont_url){
+		if(!$enable_cont_urls){
 
 			$errText=ucfirst(Request::$params["controller"]).'Controller.php" not Found.'."\n";
 			$errText.='Please check whether the file of the "'.ucfirst(Request::$params["controller"]).'Controller.php" controller exists in the directory below or inheriting the "'.ucfirst(Request::$params["controller"]).'" class from Controller. '."\n\n";
@@ -283,20 +282,37 @@ class Mk2Gen{
 			http_response_code(404);
 			throw new \Exception($errText);
 		}
+		
+		if(!empty(Request::$params["namespace"])){
+			// if namespace existed, change controllerpath...
+			$cont_name=Request::$params["namespace"]."\\".ucfirst(Request::$params["controller"])."Controller";
+		}
+		else{
+			$cont_name=MK2_NAMESPACE."\\".ucfirst(Request::$params["controller"])."Controller";
+		}
 
-		$cont_name=MK2_NAMESPACE."\\".ucfirst(Request::$params["controller"])."Controller";
-		include($cont_url);
+		$classCheck=false;
+		foreach($enable_cont_urls as $cont_url){
+
+			include($cont_url);
+			if(!empty(class_exists($cont_name))){
+				$classCheck=true;
+				break;
+			}
+
+		}
 
 		# if controller class not empty, output error message.
-		if(empty(class_exists($cont_name))){
+		if(!$classCheck){
 
 			$errText='"'.$cont_name.'" class does not exist in "'.$cont_name.'.php".'."\n";
 			$errText.='Please declare the "'.$cont_name.'" class to "'.$cont_name.'.php" file.'."\n";
 			$errText.='Path : '.$cont_url."\n\n";
-
+	
 			http_response_code(404);
-
+	
 			throw new \Exception($errText);
+
 		}
 
 		# controller class constructor.
