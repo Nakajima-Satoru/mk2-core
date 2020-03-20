@@ -43,10 +43,15 @@ class CoreBlockStatic{
 		# serach class..
 
 		foreach($params as $key=>$p_){
-
 			$option=[];
 			if(is_int($key)){
-				$className=ucfirst($p_);
+				if(gettype($p_)=="array"){
+					$className=ucfirst(key($p_));
+					$option=$p_;
+				}
+				else{
+					$className=ucfirst($p_);
+				}
 			}
 			else
 			{
@@ -278,5 +283,4 @@ class CoreBlockStatic{
 		}
 
 	}
-
 }
