@@ -106,23 +106,22 @@ class CoreBlockStatic{
 				}
 
 				# namespace check
-				if(!empty(Request::$params["namespace"])){
-					if(!empty($option["namespace"])){
-						$path=$option["namespace"]."\\".$className.$classType;						
-						unset($option["namespace"]);
-					}
-					else{
-						$path=Request::$params["namespace"]."\\".$className.$classType;
-					}
-
-					if(!class_exists($path)){
-						$path=MK2_NAMESPACE."\\".$className.$classType;
-					}
+				if(!empty($option["namespace"])){
+					$path=$option["namespace"]."\\".$className.$classType;						
+					unset($option["namespace"]);
 				}
 				else{
-					$path=MK2_NAMESPACE."\\".$className.$classType;
+					if(!empty(Request::$params["namespace"])){
+						$path=Request::$params["namespace"]."\\".$className.$classType;
+					}
+					else{
+						$path="mk2\core\\".$className.$classType;
+					}
 				}
 
+				if(!class_exists($path)){
+					$path=MK2_NAMESPACE."\\".$className.$classType;
+				}
 				if(!class_exists($path)){
 					$path="mk2\core\\".$className.$classType;
 				}
