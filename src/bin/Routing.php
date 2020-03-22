@@ -162,6 +162,9 @@ class Routing{
 		}
 
 		Request::$params=$this->params;
+		if(!empty($beforeRequest["namespace"])){
+			Request::$params["namespace"]=$beforeRequest["namespace"];
+		}
 		if(!empty($beforeRequest)){
 			Request::$params["beforeRequest"]=$beforeRequest;
 		}

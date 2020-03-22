@@ -116,23 +116,24 @@ class Import{
 			}
 
 			// search...
-			$jugement=false;
+			$enable_urls=[];
 			foreach($pathList as $cm_){
 
 				$url=$cm_.$c.$className.".php";
 
 				if(!empty(file_exists($url))){
-					$jugement=true;
-					break;
+					if(empty(class_exists(basename($c.$className)))){
+						include_once($url);
+					}
 				}
 			}
-
+/*
 			if($jugement){
 				if(empty(class_exists(basename($c.$className)))){
 					include_once($url);
 				}
 			}
-
+*/
 		}
 	}
 }
