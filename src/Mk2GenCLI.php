@@ -16,8 +16,6 @@ class Mk2GenCLI{
 
 	public function __construct(){
 
-		#default const setting
-		$this->setConst();
 		try{
 
 			$this->loadingLibs();
@@ -35,17 +33,12 @@ class Mk2GenCLI{
 		
 	}
 
-	# (private) setConst
-	private function setConst(){
-		include("bin/Construct.php");
-	}
-
 	# (private) loading Libraries
 
 	private function loadingLibs(){
 
 		# Include basic core libraries.
-
+		include("bin/Construct.php");
 		include("bin/function.php");
 		include("bin/CR.php");
 		include("bin/Routing.php");
