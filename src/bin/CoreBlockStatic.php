@@ -77,7 +77,6 @@ class CoreBlockStatic{
 				unset($option["_independent"]);
 			}
 
-			$jugement=false;
 			$enable_urls=[];
 			foreach($allowPathList as $m_){
 
@@ -85,97 +84,89 @@ class CoreBlockStatic{
 
 				if(!empty(file_exists($url))){
 					$enable_urls[]=$url;
-					$jugement=true;
 				}
 			}
 
-			if(!$jugement){
-/*
-				if(empty($this->{$classType})){
-					$this->{$classType}=new \stdClass();
-				}
-*/
-				$defaultClassName="mk2\core\\".$classType;
-				$outputs->{$classType}->{$className}=new $defaultClassName();
-				
-			}
-			else
-			{
+			if($enable_urls){
 				foreach($enable_urls as $url){
 					include_once($url);
 				}
+			}
 
-				# namespace check
-				if(!empty($option["namespace"])){
-					$path=$option["namespace"]."\\".$className.$classType;						
-					unset($option["namespace"]);
+			# namespace check
+			if(!empty($option["namespace"])){
+				$path=$option["namespace"]."\\".$className.$classType;
+				unset($option["namespace"]);
+			}
+			else{
+				if(!empty(Request::$params["namespace"])){
+					$path=Request::$params["namespace"]."\\".$className.$classType;
 				}
 				else{
-					if(!empty(Request::$params["namespace"])){
-						$path=Request::$params["namespace"]."\\".$className.$classType;
-					}
-					else{
-						$path="mk2\core\\".$className.$classType;
-					}
-				}
-
-				if(!class_exists($path)){
-					$path=MK2_NAMESPACE."\\".$className.$classType;
-				}
-				if(!class_exists($path)){
 					$path="mk2\core\\".$className.$classType;
 				}
-				if(!class_exists($path)){
-					$path=$className.$classType;
-				}
+			}
 
+			if(!class_exists($path)){
+				$path=MK2_NAMESPACE."\\".$className.$classType;
+			}
+			if(!class_exists($path)){
+				$path="mk2\core\\".$className.$classType;
+			}
+			if(!class_exists($path)){
 				if($classType=="Packer"){
+					// Standard Packer Class..
+					$path="mk2\packer\\".$className.$classType;
+				}
+			}
+			if(!class_exists($path)){
+				$path=$className.$classType;
+			}
 
-					$classNameUseView=$className."UI";
+			if($classType=="Packer"){
 
-					$pathUseView=MK2_NAMESPACE."\\".$className.$classType."UI";
+				$classNameUseView=$className."UI";
 
-					if(!class_exists($pathUseView)){
-						$pathUseView="mk2\core\\".$className.$classType."UI";
-					}
-					if(!class_exists($pathUseView)){
-						$pathUseView=$className.$classType."UI";
-					}
+				$pathUseView=MK2_NAMESPACE."\\".$className.$classType."UI";
+
+				if(!class_exists($pathUseView)){
+					$pathUseView="mk2\core\\".$className.$classType."UI";
+				}
+				if(!class_exists($pathUseView)){
+					// Standard Packer Class..
+					$pathUseView="mk2\packer\\".$className.$classType."UI";
+				}
+				if(!class_exists($pathUseView)){
+					$pathUseView=$className.$classType."UI";
+				}
+			}
+
+			if(class_exists($path)){
+
+				$buffer=new $path($option);
+				if($classType=="Table"){
+					$buffer->_settingsModel();
 				}
 
-				if(class_exists($path)){
-/*
-					if(empty($this->{$classType})){
-						$this->{$classType}=new \stdClass();
-					}
-*/
-					$buffer=new $path($option);
-					if($classType=="Table"){
-						$buffer->_settingsModel();
-					}
-
-					if(!empty($outputClassName)){
-						$outputs->{$classType}->{$outputClassName}=$buffer;
-					}
-					else{
-						$outputs->{$classType}->{$className}=$buffer;
-					}
-
+				if(!empty($outputClassName)){
+					$outputs->{$classType}->{$outputClassName}=$buffer;
+				}
+				else{
+					$outputs->{$classType}->{$className}=$buffer;
 				}
 
-				if($classType=="Packer"){
+			}
 
-					if(class_exists($pathUseView)){
-						$classNameUseView=substr($classNameUseView,0,-2);
-						$outputs->PackerUI->{$classNameUseView}=new $pathUseView($option);
+			if($classType=="Packer"){
 
-					}
+				if(class_exists($pathUseView)){
+					$classNameUseView=substr($classNameUseView,0,-2);
+					$outputs->PackerUI->{$classNameUseView}=new $pathUseView($option);
 				}
 			}
 		}
 
 		return $outputs;
-
 	}
 
 	/**

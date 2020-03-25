@@ -35,27 +35,27 @@ trait traitCoreBlock{
 	}
 
 	# (protected) setting
-	
-	protected function setting($params){
+
+	protected function setting($params,$addAllow=null){
 
 		foreach($params as $key=>$p_){
 			if($key=="Model"){
-				$this->setModel($p_);
+				$this->setModel($p_,$addAllow);
 			}
 			else if($key=="Table"){
-				$this->setTable($p_);
+				$this->setTable($p_,$addAllow);
 			}
 			else if($key=="Validator"){
-				$this->setValidator($p_);
+				$this->setValidator($p_,$addAllow);
 			}
 			else if($key=="Packer"){
-				$this->setPacker($p_);
+				$this->setPacker($p_,$addAllow);
 			}
 			else if($key=="Controller"){
-				$this->setController($p_);
+				$this->setController($p_,$addAllow);
 			}
 			else if($key=="Shell"){
-				$this->setShell($p_);
+				$this->setShell($p_,$addAllow);
 			}
 		}
 		return $this;
@@ -64,10 +64,10 @@ trait traitCoreBlock{
 	# (protected) set model
 	# By enumerating the Model class you want to use here, it will be loaded automatically.
 
-	protected function setModel($params){
+	protected function setModel($params,$addAllow=null){
 
 		// add class loading
-		$this->_addClassLoading("Model",$params);
+		$this->_addClassLoading("Model",$params,$addAllow);
 		return $this;
 
 	}
@@ -75,10 +75,10 @@ trait traitCoreBlock{
 	# (protected) set Table
 	# By enumerating the (DB)Table class you want to use here, it will be loaded automatically.
 
-	protected function setTable($params){
+	protected function setTable($params,$addAllow=null){
 
 		// add class loading
-		$this->_addClassLoading("Table",$params);
+		$this->_addClassLoading("Table",$params,$addAllow);
 		return $this;
 
 	}
@@ -86,10 +86,10 @@ trait traitCoreBlock{
 	# (protected) set Validator
 	# By enumerating the Validator class you want to use here, it will be loaded automatically.
 
-	protected function setValidator($params){
+	protected function setValidator($params,$addAllow=null){
 
 		// add class loading
-		$this->_addClassLoading("Validator",$params);
+		$this->_addClassLoading("Validator",$params,$addAllow);
 		return $this;
 
 	}
@@ -97,10 +97,10 @@ trait traitCoreBlock{
 	# (protected) set packer
 	# By enumerating the Packer class you want to use here, it will be loaded automatically.
 
-	protected function setPacker($params){
+	protected function setPacker($params,$addAllow=null){
 
 		// add class loading
-		$this->_addClassLoading("Packer",$params,[MK2_PATH_VENDOR."mk2/packer/src/"]);
+		$this->_addClassLoading("Packer",$params,$addAllow);
 		return $this;
 
 	}
@@ -108,10 +108,10 @@ trait traitCoreBlock{
 	# (protected) set controller
 	# By enumerating the Controller class you want to use here, it will be loaded automatically.
 
-	protected function setController($params){
+	protected function setController($params,$addAllow=null){
 
 		// add class loading
-		$this->_addClassLoading("Controller",$params);
+		$this->_addClassLoading("Controller",$params,$addAllow);
 		return $this;
 	
 	}
@@ -119,10 +119,10 @@ trait traitCoreBlock{
 	# (protected) set Shell
 	# By enumerating the Shell class you want to use here, it will be loaded automatically.
 
-	protected function setShell($params){
+	protected function setShell($params,$addAllow=null){
 
 		// add class loading
-		$this->_addClassLoading("Shell",$params);
+		$this->_addClassLoading("Shell",$params,$addAllow);
 	}
 
 	# (private) _addClassLoading
