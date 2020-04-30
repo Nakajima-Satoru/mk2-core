@@ -1,30 +1,40 @@
 <?php
 
-/*
-
-mk2 | Mk2Gen
-
-Class for starting the core library of PHP framework mk2 (provisional).
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * Mark2 | Mk2Gen
+ * 
+ * Class for starting the core library of PHP framework mk2 (provisional).
+ * 
+ * Copylight(C) Nakajima Satoru 2020.
+ * URL https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 
 class Mk2Gen{
 
-	# constructor
+	/**
+	 * constructor
+	 */
 
 	public function __construct(){
 
 		try{
 
+			// Loading core Libraries.
 			$this->loadingLibs();
+
+			// Loading Application Config Data.
 			$this->loadingApps();
+
+			// Loading Library Customise.
 			$this->loadingLibsCustom();
+
+			// Routing Data Read.
 			$passed=$this->routings();
 
+			// if passed, exit.
 			if(!empty($passed)){
 				return;
 			}
@@ -387,10 +397,6 @@ class Mk2Gen{
 	# (private) errorLogic
 
 	private function errorLogic($errMsg,$mode=null){
-
-		if(Config::get("debugMode")>=1){
-			$errMsg="An Internal Error Has Occurred.";
-		}
 
 		$this->Routing->error(http_response_code(),$errMsg);
 

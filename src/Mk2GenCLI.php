@@ -1,25 +1,34 @@
 <?php
 
-/*
-
-mk2 | Mk2GenCLI
-
-Photoshop library for mk2 command execution.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * Mark2 | Mk2GenCLI
+ * 
+ * Photoshop library for mk2 command execution.
+ * 
+ * Copylight(C) Nakajima Satoru 2020.
+ * URL https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 
 class Mk2GenCLI{
 
+	/**
+	 * constructor
+	 */
+
 	public function __construct(){
 
 		try{
 
+			// Loading core Libraries.
 			$this->loadingLibs();
+			
+			// Loading Application Config Data.
 			$this->loadingApps();
+	
+			// Loading Library Customise.
 			$this->loadingLibsCustom();
 
 			$argv=$_SERVER["argv"];
