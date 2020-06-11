@@ -198,6 +198,7 @@ class Routing{
 
 		$this->params["url"]=$fullPath.$requestUrl;
 		$this->params["root"]=$fullPath.$phpSelf."/";
+		$this->params["base"]=str_replace($this->params["root"],"/",$this->params["url"]);
 		$this->params["domain"]=$_SERVER["HTTP_HOST"];
 		$this->params["option"]=[
 			"method"=>$_SERVER["REQUEST_METHOD"],
