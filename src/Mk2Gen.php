@@ -324,7 +324,7 @@ class Mk2Gen{
 		$this->controllerCheckModifier($cont,$cont_name,$cont_url);
 
 		# filter before hook.
-		#$cont->filterBefore();
+		$cont->filterBefore();
 
 		# If actionPass is true, the logic in the action method is ignored.
 		if(empty($cont->actionPass)){
@@ -345,10 +345,11 @@ class Mk2Gen{
 			$out=null;
 		}
 
-
 		# rendering..
 		$cont->___rendering($out);
-		#$cont->filterAfter();
+
+		# filter after hook.
+		$cont->filterAfter();
 
 	}
 

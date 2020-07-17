@@ -111,4 +111,10 @@ class Controller extends CoreBlock{
 
 	}
 
+	# filterBefore
+	public function filterBefore(){}
+
+	# filterAfter
+	public function filterAfter(){}
+
 }
