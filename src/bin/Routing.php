@@ -111,19 +111,7 @@ class Routing{
 
 	public function error($errCode,$Err){
 
-		$beforeRequest=[];
-		if(!empty(Request::$params["controller"])){
-			$beforeRequest["controller"]=Request::$params["controller"];
-		}
-		if(!empty(Request::$params["action"])){
-			$beforeRequest["action"]=Request::$params["action"];
-		}
-		if(!empty(Request::$params["request"])){
-			$beforeRequest["request"]=Request::$params["request"];
-		}
-		if(!empty(Request::$params["namespace"])){
-			$beforeRequest["namespace"]=Request::$params["namespace"];
-		}
+		$beforeRequest=Request::$params;
 
 		if(!empty($this->routes["error"][$errCode])){
 			$errRoute=$this->routes["error"][$errCode];
