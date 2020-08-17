@@ -197,6 +197,10 @@ class Mk2Gen{
 					if(!empty(file_exists($cont_url))){
 						$enable_cont_urls[]=$cont_url;
 					}
+					$cont_url=$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
+					if(!empty(file_exists($cont_url))){
+						$enable_cont_urls[]=$cont_url;
+					}
 				}
 			}
 		}

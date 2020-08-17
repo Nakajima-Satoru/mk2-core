@@ -112,6 +112,7 @@ class Import{
 			if(!empty($allow_dir[$className])){
 				foreach($allow_dir[$className] as $am){
 					$pathList[]=$classPath.$am."/";
+					$pathList[]=$am."/";
 				}
 			}
 

@@ -37,6 +37,7 @@ class CoreBlockStatic{
 		if(!empty($allow_dir[$classType])){
 			foreach($allow_dir[$classType] as $am){
 				$allowPathList[]=$classPath."/".$am."/";
+				$allowPathList[]=$am."/";
 			}
 		}
 
