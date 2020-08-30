@@ -90,12 +90,16 @@ class Render{
 			}
 			else
 			{
-
-				$errText= 'Render not Found : A Render file necessary for screen display does not exist.'."\n";
-				$errText= 'Please check if the Render file exists in the following directory.\n'."\n";
-				$errText.= 'Path : '.$renderUrl;
-				echo $errText;
-
+				if(!Config::get("debugMode")){
+					echo "<pre>";
+					$errText= 'Render not Found : A Render file necessary for screen display does not exist.'."\n";
+					$errText= 'Please check if the Render file exists in the following directory.\n'."\n";
+					$errText.= 'Path : '.$renderUrl;
+					echo $errText;
+					$e=new \Exception;
+					echo $e;
+					echo "</pre>";	
+				}
 			}
 		}
 
@@ -119,43 +123,55 @@ class Render{
 
 	public function getRender($oBuff=false){
 
-		//set layout
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
+		try{
+			//set layout
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
 			}
-		}
-		
-		$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
-		if(!empty($this->render)){
-			if(!empty($this->renderBase)){
-				$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+			
+			$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+			if(!empty($this->render)){
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+				}
+				else
+				{
+					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				}
 			}
 			else
 			{
-				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
 			}
-		}
-		else
-		{
-			if(!empty($this->renderBase)){
-				$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+
+			if($oBuff){
+				ob_start();
 			}
-			else{
-				$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+
+			if(!file_exists($renderUrl)){
+				throw new \Exception('render file not found "'.$renderUrl.'"'."\n");
 			}
-		}
+			include($renderUrl);
 
-		if($oBuff){
-			ob_start();
-		}
+			if($oBuff){
+				$contents=ob_get_contents();
+				ob_end_clean();
+				return $contents;
+			}
 
-		include($renderUrl);
-
-		if($oBuff){
-			$contents=ob_get_contents();
-			ob_end_clean();
-			return $contents;
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo '<pre style="text-align:left">';
+				echo $e;
+				echo '</pre>';
+			}
 		}
 
 	}
@@ -164,30 +180,44 @@ class Render{
 	
 	public function getViewPart($name,$oBuff=false){
 
-		//set layout
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
+		try{
+
+			//set layout
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
 			}
-		}
 
-		if(!empty($this->renderBaseViewPart)){
-			$partUrl=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
-		}
-		else{
-			$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
-		}
+			if(!empty($this->renderBaseViewPart)){
+				$partUrl=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+			}
 
-		if($oBuff){
-			ob_start();
-		}
+			if($oBuff){
+				ob_start();
+			}
 
-		include($partUrl);
+			if(!file_exists($partUrl)){
+				throw new \Exception('viewpart file not found "'.$partUrl.'"'."\n");
+			}
 
-		if($oBuff){
-			$contents=ob_get_contents();
-			ob_end_clean();
-			return $contents;
+			include($partUrl);
+
+			if($oBuff){
+				$contents=ob_get_contents();
+				ob_end_clean();
+				return $contents;
+			}
+
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo "<pre style='text-align:left'>";
+				echo $e;
+				echo "</pre>";	
+			}
 		}
 
 	}
@@ -197,14 +227,10 @@ class Render{
 	public function existViewPart($name){
 
 		if(!empty($this->renderBaseViewPart)){
-
 			$path=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
-
 		}
 		else{
-
 			$path=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
-
 		}
 
 		if(file_exists($path)){

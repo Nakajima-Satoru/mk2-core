@@ -187,47 +187,60 @@ trait traitCoreBlock{
 
 	protected function getRender($renderName=null,$renderClassName=null,$controllerName=null){
 
-		# Render Class Exist Check..
-		if(class_exists("mk2\\core\\Render")){
+		try{
 
-			# set Render Class
-			$Render=$this->_setRender($renderClassName);
-			$Render->renderBase=$this->renderBase;
-			$Render->renderBaseViewPart=$this->renderBaseViewPart;
+			# Render Class Exist Check..
+			if(class_exists("mk2\\core\\Render")){
 
-			ob_start();
-			$Render->rendering(null,$renderName,$controllerName);
-			$contents=ob_get_contents();
-			ob_end_clean();
+				# set Render Class
+				$Render=$this->_setRender($renderClassName);
+				$Render->renderBase=$this->renderBase;
+				$Render->renderBaseViewPart=$this->renderBaseViewPart;
 
-			return $contents;
+				ob_start();
+				$Render->rendering(null,$renderName,$controllerName);
+				$contents=ob_get_contents();
+				ob_end_clean();
 
-		}
-		else
-		{
+				return $contents;
 
-			//set Template
-			if(!empty($this->__view_output)){
-				foreach($this->__view_output as $key=>$o_){
-					$$key=$o_;
-				}
-			}
-
-			if(!empty($this->renderBase)){
-				$view_url=$this->renderBase.$renderName.MK2_RENDERING_EXTENSION;
 			}
 			else
 			{
-				$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
+
+				//set Template
+				if(!empty($this->__view_output)){
+					foreach($this->__view_output as $key=>$o_){
+						$$key=$o_;
+					}
+				}
+
+				if(!empty($this->renderBase)){
+					$view_url=$this->renderBase.$renderName.MK2_RENDERING_EXTENSION;
+				}
+				else
+				{
+					$view_url=MK2_PATH_APP_RENDER.$renderName.MK2_RENDERING_EXTENSION;
+				}
+
+				if(!file_exists($view_url)){
+					throw new \Exception('render file not found "'.$view_url.'"'."\n");
+				}
+				ob_start();
+				include($view_url);
+				$contents=ob_get_contents();
+				ob_end_clean();
+
+				return $contents;
+
 			}
 
-			ob_start();
-			include($view_url);
-			$contents=ob_get_contents();
-			ob_end_clean();
-
-			return $contents;
-
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo '<pre style="text-align:left">';
+				echo $e;
+				echo "</pre>";	
+			}
 		}
 
 	}
@@ -236,28 +249,41 @@ trait traitCoreBlock{
 
 	protected function getViewPart($name){
 
-		//set Template
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
+		try{
+
+			//set Template
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
+			}
+
+			if(!empty($this->renderBaseViewPart)){
+				$part_url=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+			}
+			else
+			{
+				$part_url=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+			}
+
+			if(!file_exists($part_url)){
+				throw new \Exception('viewpart file not found "'.$part_url.'"'."\n");
+			}
+
+			ob_start();
+			include($part_url);
+			$contents=ob_get_contents();
+			ob_end_clean();
+
+			return $contents;
+
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo '<pre style="text-align:left">';
+				echo $e;
+				echo "</pre>";	
 			}
 		}
-
-		if(!empty($this->renderBaseViewPart)){
-			$part_url=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
-		}
-		else
-		{
-			$part_url=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
-		}
-
-
-		ob_start();
-		include($part_url);
-		$contents=ob_get_contents();
-		ob_end_clean();
-
-		return $contents;
 	}
 
 	# (protected) existRender
