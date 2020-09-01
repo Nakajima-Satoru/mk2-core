@@ -19,63 +19,91 @@ use mk2\orm\OrmDo;
 
 try{
 
-	if(!empty(Config::get("database"))){
-		OrmDo::setSchema(Config::get("database"));
+	$getDbConnect=Config::get("database");
+	if(is_array($getDbConnect)){
+		foreach($getDbConnect as $field=>$values){
+			OrmDo::setDo($field,$values);
+		}
 	}
 
-}catch(\Exception $e){
-	throw new \Exception($e);
-}
+}catch(\Exception $e){}
 
 class Table extends CoreBlock{
 
-	public $OrmDoExist=true;
-
 	public $dbName="default";
-	public $prefix="abc_";
+	public $prefix=null;
 
 	public function __construct($option=[]){
 		parent::__construct($option);
 
+		$getDbConnect=Config::get("database");
+		if(!empty($getDbConnect[$this->dbName])){
+			$getDbConnect=$getDbConnect[$this->dbName];
+		}
+		else{
+			$getDbConnect=null;
+		}
+
+		if(!empty($getDbConnect["prefix"])){
+			$this->prefix=$getDbConnect["prefix"];
+		}
+
 		$this->orm=new Orm($this);
-/*
-		if(empty($option["setSchema"])){
-			if(!empty($this->setSchema)){
-				$option["setSchema"]=$this->setSchema;
-				unset($this->setSchema);
-			}
-		}
-
-		if(!empty($option["setSchema"])){
-			$PdoDriveName=hash("sha256",json_encode($option["setSchema"]));
-			OrmDo::setSchemaAdd($PdoDriveName,$option["setSchema"]);
-			$this->dbName=$PdoDriveName;
-			$this->PdoDriveName=$PdoDriveName;
-			unset($option["setSchema"]);
-		}
-
-		# option setting
-		if(!empty($option)){
-			foreach($option as $key=>$o_){
-				$this->{$key}=$o_;
-			}
-		}
-
-		// if table name not existed, auto create table name.
-		if(empty($this->table)){
-			$tableName=get_class($this);
-			$tableName=explode("\\",$tableName);
-			$tableName=$tableName[count($tableName)-1];
-			$tLenCount=strrpos($tableName,"Table");
-			$tableName=substr($tableName,0,$tLenCount);
-			$this->table=strtolower($tableName);
-		}
-
-		parent::__construct($this->table,$this->dbName);
-*/
+		$this->orm->prefix=&$this->prefix;
+		$this->orm->PdoDriveName=&$this->dbName;
+		$this->orm->table=&$this->table;
 
 	}
 
+	public function setSchema($database){
+
+		if(!empty($database["prefix"])){
+			$this->prefix=$database["prefix"];
+		}
+		else{
+			$this->prefix=null;
+		}
+		$this->orm->setSchema(null,$database);
+
+	}
+
+	public function connectCheck(){
+		return $this->orm->connectCheck();
+	}
+	/**
+	 * query
+	 */
+	public function query($sql){
+		return $this->orm->query($sql);
+	}
+
+	/**
+	 * select
+	 */
+	public function select($option=null){
+		return $this->orm->select($option);
+	}
+
+/*
+	public $OrmDoExist=true;
+
+	public $dbName="default";
+	public $prefix=null;
+
+	public function __construct($option=[]){
+		parent::__construct($option);
+
+		$database=Config::get("database");
+		if(!empty($database[$this->dbName]["prefix"])){
+			$this->prefix=$database[$this->dbName]["prefix"];
+		}
+
+		$this->orm=new Orm($this);
+
+	}
+	public function setSchema($dbSchema){
+		return $this->orm->setSchema($dbSchema);
+	}
 	public function query($sql){
 		return $this->orm->query($sql);
 	}
@@ -120,9 +148,7 @@ class Table extends CoreBlock{
 		return $this;
 	}
 
-	/**
-	 * hasMany
-	 */
+	# hasMany
 	public function hasMany($params=[]){
 
 		if(!empty($params)){
@@ -158,9 +184,7 @@ class Table extends CoreBlock{
 		return $this;
 	}
 
-	/**
-	 * hasOne
-	 */
+	# hasOne
 	public function hasOne($params=[]){
 
 		if(!empty($params)){
@@ -196,10 +220,7 @@ class Table extends CoreBlock{
 		return $this;
 	}
 
-	/**
-	 * belongsTo
-	 */
-
+	# belongsTo
 	public function belongsTo($params=[]){
 
 		if(!empty($params)){
@@ -265,5 +286,6 @@ class Table extends CoreBlock{
 	public function deleteBefore(){}
 
 	# deleteAfter
-	public function deleteAfter(){}
+	public function deleteAfter(){
+	*/
 }
