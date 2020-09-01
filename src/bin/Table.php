@@ -21,6 +21,7 @@ try{
 
 	$getDbConnect=Config::get("database");
 	if(is_array($getDbConnect)){
+		OrmDo::setSchema($getDbConnect);
 		foreach($getDbConnect as $field=>$values){
 			OrmDo::setDo($field,$values);
 		}
@@ -32,6 +33,7 @@ class Table extends CoreBlock{
 
 	public $dbName="default";
 	public $prefix=null;
+	public $primaryKey="id";
 
 	public function __construct($option=[]){
 		parent::__construct($option);
@@ -47,11 +49,7 @@ class Table extends CoreBlock{
 		if(!empty($getDbConnect["prefix"])){
 			$this->prefix=$getDbConnect["prefix"];
 		}
-
 		$this->orm=new Orm($this);
-		$this->orm->prefix=&$this->prefix;
-		$this->orm->PdoDriveName=&$this->dbName;
-		$this->orm->table=&$this->table;
 
 	}
 
@@ -63,6 +61,7 @@ class Table extends CoreBlock{
 		else{
 			$this->prefix=null;
 		}
+
 		$this->orm->setSchema(null,$database);
 
 	}
@@ -84,6 +83,156 @@ class Table extends CoreBlock{
 		return $this->orm->select($option);
 	}
 
+	/**
+	 * show
+	 */
+	public function show(){
+		return $this->orm->show();
+	}
+
+	/**
+	 * save
+	 */
+	public function save($data=[],$option=[]){
+		return $this->orm->save($data,$option);
+	}
+
+	/**
+	 * delete
+	 */
+	public function delete($data=[]){
+		return $this->orm->delete($data);
+	}
+
+	/**
+	 * migrate
+	 */
+	public function migrate($data=[],$makeSchema=false){
+		return $this->orm->migrate($data,$makeSchema);
+	}
+
+	/**
+	 * associate
+	 */
+	public function associate($params=null){
+		return $this->orm->associate($params);
+	}
+
+		# hasMany
+		public function hasMany($params=[]){
+
+			if(!empty($params)){
+	
+				$setParams=[];
+	
+				$this->setTable($params);
+	
+				foreach($params as $key=>$p_){
+		
+					if(is_int($key)){
+						$modelName=$p_;
+						$p_=[
+							"model"=>$p_,
+						];
+					}
+					else
+					{
+						$modelName=$key;
+						$p_["model"]=$key;
+					}
+		
+					$p_["opject"]=$this->Table->{$modelName};
+		
+					$setParams[$modelName]=$p_;
+		
+				}
+	
+				$this->orm->associate["hasMany"]=$setParams;
+	
+			}
+	
+			return $this;
+		}
+	
+		# hasOne
+		public function hasOne($params=[]){
+	
+			if(!empty($params)){
+	
+				$setParams=[];
+	
+				$this->setTable($params);
+	
+				foreach($params as $key=>$p_){
+	
+					if(is_int($key)){
+						$modelName=$p_;
+						$p_=[
+							"model"=>$p_,
+						];
+					}
+					else
+					{
+						$modelName=$key;
+						$p_["model"]=$key;
+					}
+	
+					$p_["opject"]=$this->Table->{$modelName};
+	
+					$setParams[$modelName]=$p_;
+	
+				}
+	
+				$this->orm->associate["hasOne"]=$setParams;
+	
+			}
+	
+			return $this;
+		}
+	
+		# belongsTo
+		public function belongsTo($params=[]){
+	
+			if(!empty($params)){
+	
+				$setParams=[];
+	
+				$this->setTable($params);
+	
+				foreach($params as $key=>$p_){
+	
+					if(is_int($key)){
+						$modelName=$p_;
+						$p_=[
+							"model"=>$p_,
+						];
+					}
+					else
+					{
+						$modelName=$key;
+						$p_["model"]=$key;
+					}
+	
+					$p_["opject"]=$this->Table->{$modelName};
+	
+					$setParams[$modelName]=$p_;
+	
+				}
+	
+				$this->orm->associate["belongsTo"]=$setParams;
+	
+			}
+	
+			return $this;
+		}
+	
+		public function getSqlLog(){
+			return $this->orm->getSqlLog();
+		}
+		public function resetSqlLog(){
+			$this->orm->resetSqlLog();
+		}
+		
 /*
 	public $OrmDoExist=true;
 
@@ -263,29 +412,38 @@ class Table extends CoreBlock{
 		$this->orm->resetSqlLog();
 	}
 
+	*/
+
 	# selectBefore
-	public function selectBefore($type){}
+	public function selectBefore($type){
+	//	echo "selectBefore!";
+	}
 
 	# selectAfter
+	public function selectAfter($output,$type){
 
-	public function selectAfter($output,$type){}
-
+	}
+	
 	# showBefore
 	public function showBefore(){}
-
+	
 	# showAfter
 	public function showAfter($output){}
 
 	# saveBefore
 	public function saveBefore($input){}
-
+	
 	# saveAfter
 	public function saveAfter($output){}
-
+	
 	# deleteBefore
-	public function deleteBefore(){}
-
+	public function deleteBefore(){
+		echo "delete before!";
+	}
+	
 	# deleteAfter
 	public function deleteAfter(){
-	*/
+		echo "delete after!";
+	}
+
 }
