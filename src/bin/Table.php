@@ -27,17 +27,18 @@ try{
 	throw new \Exception($e);
 }
 
-class Table extends Orm{
-
-	use traitCoreBlock;
+class Table extends CoreBlock{
 
 	public $OrmDoExist=true;
 
 	public $dbName="default";
-	
+	public $prefix="abc_";
 
 	public function __construct($option=[]){
+		parent::__construct($option);
 
+		$this->orm=new Orm($this);
+/*
 		if(empty($option["setSchema"])){
 			if(!empty($this->setSchema)){
 				$option["setSchema"]=$this->setSchema;
@@ -71,60 +72,52 @@ class Table extends Orm{
 		}
 
 		parent::__construct($this->table,$this->dbName);
+*/
 
 	}
 
-	# _settingsModel
+	public function query($sql){
+		return $this->orm->query($sql);
+	}
 
-	public function _settingsModel(){
+	public function select($option=null){
+		return $this->orm->select($option);
+	}
 
-		$this->ormSetting($this->table,$this->dbName);
+	public function show(){
+		return $this->orm->show();
+	}
 
+	public function save($data=[],$option=[]){
+		return $this->orm->save($data,$option);
+	}
+
+	public function delete($data=[]){
+		return $this->orm->delete($data);
+	}
+
+	public function migrate($data=[],$makeSchema=false){
+		return $this->orm->migrate($data,$makeSchema);
+	}
+
+	public function associate($params=null){
+		return $this->orm->associate($params);
 	}
 
 	# changeDbName
 
 	public function changeDbName($dbName){
-		
 		$this->dbName=$dbName;
-		$this->_settingsModel();
-
+		$this->orm->ormSetting($this->table,$this->dbName);
 		return $this;
 	}
 
 	# changeDbTable
 
 	public function changeDbTable($tableName){
-		
 		$this->table=$tableName;
-		$this->_settingsModel();
-		
+		$this->orm->ormSetting($this->table,$this->dbName);
 		return $this;
-	}
-
-	# associate
-
-	public function associate($params=[]){
-
-		if(!empty($params)){
-
-			if(!empty($params["hasMany"])){
-				$this->hasMany($params["hasMany"]);
-			}
-			if(!empty($params["hasOne"])){
-				$this->hasOne($params["hasOne"]);
-			}
-			if(!empty($params["belongsTo"])){
-				$this->belongsTo($params["belongsTo"]);
-			}
-		}
-		else
-		{
-			$this->associate=[];
-		}
-
-		return $this;
-
 	}
 
 	/**
@@ -158,7 +151,7 @@ class Table extends Orm{
 	
 			}
 
-			$this->associate["hasMany"]=$setParams;
+			$this->orm->associate["hasMany"]=$setParams;
 
 		}
 
@@ -196,7 +189,7 @@ class Table extends Orm{
 
 			}
 
-			$this->associate["hasOne"]=$setParams;
+			$this->orm->associate["hasOne"]=$setParams;
 
 		}
 
@@ -206,6 +199,7 @@ class Table extends Orm{
 	/**
 	 * belongsTo
 	 */
+
 	public function belongsTo($params=[]){
 
 		if(!empty($params)){
@@ -234,10 +228,42 @@ class Table extends Orm{
 
 			}
 
-			$this->associate["belongsTo"]=$setParams;
+			$this->orm->associate["belongsTo"]=$setParams;
 
 		}
 
 		return $this;
 	}
+
+	public function getSqlLog(){
+		return $this->orm->getSqlLog();
+	}
+	public function resetSqlLog(){
+		$this->orm->resetSqlLog();
+	}
+
+	# selectBefore
+	public function selectBefore($type){}
+
+	# selectAfter
+
+	public function selectAfter($output,$type){}
+
+	# showBefore
+	public function showBefore(){}
+
+	# showAfter
+	public function showAfter($output){}
+
+	# saveBefore
+	public function saveBefore($input){}
+
+	# saveAfter
+	public function saveAfter($output){}
+
+	# deleteBefore
+	public function deleteBefore(){}
+
+	# deleteAfter
+	public function deleteAfter(){}
 }

@@ -145,9 +145,6 @@ class CoreBlockStatic{
 			if(class_exists($path)){
 
 				$buffer=new $path($option);
-				if($classType=="Table"){
-					$buffer->_settingsModel();
-				}
 
 				if(!empty($outputClassName)){
 					$outputs->{$classType}->{$outputClassName}=$buffer;
