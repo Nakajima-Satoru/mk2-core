@@ -238,13 +238,4 @@ class Table extends CoreBlock{
 		return $this->orm->tsBegin();
 	}
 
-	public function selectBefore($type){}
-	public function selectAfter($output,$type){}
-	public function showBefore(){}
-	public function showAfter($output){}
-	public function saveBefore($input){}
-	public function saveAfter($output){}
-	public function deleteBefore(){}
-	public function deleteAfter(){}
-
 }
