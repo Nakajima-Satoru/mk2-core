@@ -56,9 +56,6 @@ class Mk2Gen{
 			$this->errorLogic($e);
 		}
 
-		unset($this->routes);
-		unset($this->Routing);
-
 	}
 
 	# (private) loading Libraries
@@ -427,7 +424,7 @@ class Mk2Gen{
 			}
 
 		}catch(\Exception $e){
-			echo $e;
+			echo "<pre>".$e."</pre>";
 		}
 
 	}

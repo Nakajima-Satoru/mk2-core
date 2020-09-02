@@ -118,196 +118,17 @@ class Table extends CoreBlock{
 		return $this->orm->associate($params);
 	}
 
-		# hasMany
-		public function hasMany($params=[]){
-
-			if(!empty($params)){
-	
-				$setParams=[];
-	
-				$this->setTable($params);
-	
-				foreach($params as $key=>$p_){
-		
-					if(is_int($key)){
-						$modelName=$p_;
-						$p_=[
-							"model"=>$p_,
-						];
-					}
-					else
-					{
-						$modelName=$key;
-						$p_["model"]=$key;
-					}
-		
-					$p_["opject"]=$this->Table->{$modelName};
-		
-					$setParams[$modelName]=$p_;
-		
-				}
-	
-				$this->orm->associate["hasMany"]=$setParams;
-	
-			}
-	
-			return $this;
-		}
-	
-		# hasOne
-		public function hasOne($params=[]){
-	
-			if(!empty($params)){
-	
-				$setParams=[];
-	
-				$this->setTable($params);
-	
-				foreach($params as $key=>$p_){
-	
-					if(is_int($key)){
-						$modelName=$p_;
-						$p_=[
-							"model"=>$p_,
-						];
-					}
-					else
-					{
-						$modelName=$key;
-						$p_["model"]=$key;
-					}
-	
-					$p_["opject"]=$this->Table->{$modelName};
-	
-					$setParams[$modelName]=$p_;
-	
-				}
-	
-				$this->orm->associate["hasOne"]=$setParams;
-	
-			}
-	
-			return $this;
-		}
-	
-		# belongsTo
-		public function belongsTo($params=[]){
-	
-			if(!empty($params)){
-	
-				$setParams=[];
-	
-				$this->setTable($params);
-	
-				foreach($params as $key=>$p_){
-	
-					if(is_int($key)){
-						$modelName=$p_;
-						$p_=[
-							"model"=>$p_,
-						];
-					}
-					else
-					{
-						$modelName=$key;
-						$p_["model"]=$key;
-					}
-	
-					$p_["opject"]=$this->Table->{$modelName};
-	
-					$setParams[$modelName]=$p_;
-	
-				}
-	
-				$this->orm->associate["belongsTo"]=$setParams;
-	
-			}
-	
-			return $this;
-		}
-	
-		public function getSqlLog(){
-			return $this->orm->getSqlLog();
-		}
-		public function resetSqlLog(){
-			$this->orm->resetSqlLog();
-		}
-		
-/*
-	public $OrmDoExist=true;
-
-	public $dbName="default";
-	public $prefix=null;
-
-	public function __construct($option=[]){
-		parent::__construct($option);
-
-		$database=Config::get("database");
-		if(!empty($database[$this->dbName]["prefix"])){
-			$this->prefix=$database[$this->dbName]["prefix"];
-		}
-
-		$this->orm=new Orm($this);
-
-	}
-	public function setSchema($dbSchema){
-		return $this->orm->setSchema($dbSchema);
-	}
-	public function query($sql){
-		return $this->orm->query($sql);
-	}
-
-	public function select($option=null){
-		return $this->orm->select($option);
-	}
-
-	public function show(){
-		return $this->orm->show();
-	}
-
-	public function save($data=[],$option=[]){
-		return $this->orm->save($data,$option);
-	}
-
-	public function delete($data=[]){
-		return $this->orm->delete($data);
-	}
-
-	public function migrate($data=[],$makeSchema=false){
-		return $this->orm->migrate($data,$makeSchema);
-	}
-
-	public function associate($params=null){
-		return $this->orm->associate($params);
-	}
-
-	# changeDbName
-
-	public function changeDbName($dbName){
-		$this->dbName=$dbName;
-		$this->orm->ormSetting($this->table,$this->dbName);
-		return $this;
-	}
-
-	# changeDbTable
-
-	public function changeDbTable($tableName){
-		$this->table=$tableName;
-		$this->orm->ormSetting($this->table,$this->dbName);
-		return $this;
-	}
-
 	# hasMany
 	public function hasMany($params=[]){
 
 		if(!empty($params)){
-
-			$setParams=[];
-
-			$this->setTable($params);
-
-			foreach($params as $key=>$p_){
 	
+			$setParams=[];
+	
+			$this->setTable($params);
+	
+			foreach($params as $key=>$p_){
+		
 				if(is_int($key)){
 					$modelName=$p_;
 					$p_=[
@@ -319,11 +140,11 @@ class Table extends CoreBlock{
 					$modelName=$key;
 					$p_["model"]=$key;
 				}
-	
+
 				$p_["opject"]=$this->Table->{$modelName};
-	
+
 				$setParams[$modelName]=$p_;
-	
+
 			}
 
 			$this->orm->associate["hasMany"]=$setParams;
@@ -332,18 +153,17 @@ class Table extends CoreBlock{
 
 		return $this;
 	}
-
+	
 	# hasOne
 	public function hasOne($params=[]){
-
+	
 		if(!empty($params)){
-
-			$setParams=[];
-
+	
+			$setParams=[];	
 			$this->setTable($params);
-
+	
 			foreach($params as $key=>$p_){
-
+	
 				if(is_int($key)){
 					$modelName=$p_;
 					$p_=[
@@ -359,7 +179,6 @@ class Table extends CoreBlock{
 				$p_["opject"]=$this->Table->{$modelName};
 
 				$setParams[$modelName]=$p_;
-
 			}
 
 			$this->orm->associate["hasOne"]=$setParams;
@@ -375,7 +194,6 @@ class Table extends CoreBlock{
 		if(!empty($params)){
 
 			$setParams=[];
-
 			$this->setTable($params);
 
 			foreach($params as $key=>$p_){
@@ -412,38 +230,21 @@ class Table extends CoreBlock{
 		$this->orm->resetSqlLog();
 	}
 
-	*/
-
-	# selectBefore
-	public function selectBefore($type){
-	//	echo "selectBefore!";
+	public function transaction($mode="BEGIN"){
+		return $this->orm->transaction($mode);
 	}
 
-	# selectAfter
-	public function selectAfter($output,$type){
-
+	public function tsBegin(){
+		return $this->orm->tsBegin();
 	}
-	
-	# showBefore
+
+	public function selectBefore($type){}
+	public function selectAfter($output,$type){}
 	public function showBefore(){}
-	
-	# showAfter
 	public function showAfter($output){}
-
-	# saveBefore
 	public function saveBefore($input){}
-	
-	# saveAfter
 	public function saveAfter($output){}
-	
-	# deleteBefore
-	public function deleteBefore(){
-		echo "delete before!";
-	}
-	
-	# deleteAfter
-	public function deleteAfter(){
-		echo "delete after!";
-	}
+	public function deleteBefore(){}
+	public function deleteAfter(){}
 
 }

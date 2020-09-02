@@ -15,7 +15,6 @@ namespace mk2\core;
 include_once("CoreBlockStatic.php");
 
 # Correspond with trait
-
 trait traitCoreBlock{
 
 	public $__view_output=[];
@@ -34,99 +33,49 @@ trait traitCoreBlock{
 		}
 	}
 
-	# (protected) setting
-
-	protected function setting($params,$addAllow=null){
-
-		foreach($params as $key=>$p_){
-			if($key=="Model"){
-				$this->setModel($p_,$addAllow);
-			}
-			else if($key=="Table"){
-				$this->setTable($p_,$addAllow);
-			}
-			else if($key=="Validator"){
-				$this->setValidator($p_,$addAllow);
-			}
-			else if($key=="Packer"){
-				$this->setPacker($p_,$addAllow);
-			}
-			else if($key=="Controller"){
-				$this->setController($p_,$addAllow);
-			}
-			else if($key=="Shell"){
-				$this->setShell($p_,$addAllow);
-			}
-		}
-		return $this;
-	}
-
 	# (protected) set model
 	# By enumerating the Model class you want to use here, it will be loaded automatically.
-
 	protected function setModel($params,$addAllow=null){
-
 		// add class loading
-		$this->_addClassLoading("Model",$params,$addAllow);
-		return $this;
-
+		return $this->_addClassLoading("Model",$params,$addAllow);
 	}
 
 	# (protected) set Table
 	# By enumerating the (DB)Table class you want to use here, it will be loaded automatically.
-
 	protected function setTable($params,$addAllow=null){
-
 		// add class loading
-		$this->_addClassLoading("Table",$params,$addAllow);
-		return $this;
-
+		return $this->_addClassLoading("Table",$params,$addAllow);
 	}
 
 	# (protected) set Validator
 	# By enumerating the Validator class you want to use here, it will be loaded automatically.
-
 	protected function setValidator($params,$addAllow=null){
-
 		// add class loading
-		$this->_addClassLoading("Validator",$params,$addAllow);
-		return $this;
-
+		return $this->_addClassLoading("Validator",$params,$addAllow);
 	}
 
 	# (protected) set packer
 	# By enumerating the Packer class you want to use here, it will be loaded automatically.
-
 	protected function setPacker($params,$addAllow=null){
-
 		// add class loading
-		$this->_addClassLoading("Packer",$params,$addAllow);
-		return $this;
-
+		return $this->_addClassLoading("Packer",$params,$addAllow);
 	}
 
 	# (protected) set controller
 	# By enumerating the Controller class you want to use here, it will be loaded automatically.
-
 	protected function setController($params,$addAllow=null){
-
 		// add class loading
-		$this->_addClassLoading("Controller",$params,$addAllow);
-		return $this;
-	
+		return $this->_addClassLoading("Controller",$params,$addAllow);
 	}
 
 	# (protected) set Shell
 	# By enumerating the Shell class you want to use here, it will be loaded automatically.
-
 	protected function setShell($params,$addAllow=null){
-
 		// add class loading
-		$this->_addClassLoading("Shell",$params,$addAllow);
+		return $this->_addClassLoading("Shell",$params,$addAllow);
 	}
 
 	# (private) _addClassLoading
-
 	private function _addClassLoading($classType,$params,$addAllow=null){
 
 		$out=CoreBlockStatic::_addClassLoading($classType,$params,$addAllow);
@@ -149,6 +98,8 @@ trait traitCoreBlock{
 			}
 		}
 
+		return $this;
+
 	}
 
 	# (protected) getUrl
@@ -169,22 +120,12 @@ trait traitCoreBlock{
 		
 	}
 
-	# (protected) gotoError
-
-	protected function gotoError(){
-
-		http_response_code(404);
-		throw new \Exception("not found page.");
-	}
-
 	# (protected) View values set
-
 	protected function set($name,$value){
 		$this->__view_output[$name]=$value;
 	}
 
 	# (protected) getRender
-
 	protected function getRender($renderName=null,$renderClassName=null,$controllerName=null){
 
 		try{
@@ -246,7 +187,6 @@ trait traitCoreBlock{
 	}
 
 	# (protected) getPart
-
 	protected function getViewPart($name){
 
 		try{
@@ -302,10 +242,6 @@ trait traitCoreBlock{
 		if(file_exists($path)){
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 
 	}
 
@@ -322,10 +258,6 @@ trait traitCoreBlock{
 
 		if(file_exists($path)){
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 
 	}
@@ -345,10 +277,6 @@ trait traitCoreBlock{
 
 		if(file_exists($path)){
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 
 	}

@@ -25,8 +25,6 @@ class Render{
 			$this->__view_output=$params["__view_output"];
 		}
 
-		$use_class=Config::get("useClass");
-
 		# request
 		$this->request=Request::getall();
 
@@ -114,15 +112,12 @@ class Render{
 	# getUrl
 
 	public function getUrl($params){
-
 		return CoreBlockStatic::_getUrl($params);
-		
 	}
 
 	# getRender
 
 	public function getRender($oBuff=false){
-
 		try{
 			//set layout
 			if(!empty($this->__view_output)){
@@ -181,7 +176,6 @@ class Render{
 	public function getViewPart($name,$oBuff=false){
 
 		try{
-
 			//set layout
 			if(!empty($this->__view_output)){
 				foreach($this->__view_output as $key=>$o_){
@@ -235,10 +229,6 @@ class Render{
 
 		if(file_exists($path)){
 			return true;
-		}
-		else
-		{
-			return false;
 		}
 	}
 
