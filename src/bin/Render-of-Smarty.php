@@ -34,8 +34,6 @@ class Render{
 			$this->__view_output=$params["__view_output"];
 		}
 
-		$use_class=Config::get("useClass");
-
 		# request
 		$this->request=Request::getall();
 
@@ -108,105 +106,7 @@ class Render{
 	# (protected) getUrl
 
 	public function getUrl($params){
-
-		if(is_array($params)){
-
-			$urla="";
-
-			if(!empty($params["head"])){
-				$urla.=$params["head"]."/";
-				unset($params["head"]);
-			}
-
-			if(empty($params["controller"])){
-				$params["controller"]=$this->request->params["controller"];
-			}
-
-			if(empty($params["action"]) || @$params["action"]=="index"){
-				$params["action"]="";
-			}
-
-			$urla.=$params["controller"];
-
-			if($params["action"]){
-				$action=$params["action"];
-				$urla.="/".$action;
-			}
-
-			//get
-			if(!empty($params["?"])){
-				$get_params=$params["?"];
-			}
-
-			//hash
-			if(!empty($params["#"])){
-				$hash=$params["#"];
-			}
-
-			unset(
-				$params["controller"],
-				$params["action"],
-				$params["?"],
-				$params["#"]
-			);
-
-			if(!empty($params)){
-				if(empty($action)){
-					$urla.="/index";
-				}
-
-				foreach($params as $tq_){
-					$urla.="/".$tq_;
-				}
-			}
-
-			if(!empty($get_params)){
-				if(is_array($get_params)){
-					$get_str="?";
-					$ind=0;
-					foreach($get_params as $key=>$g_){
-						if($ind>0){
-							$get_str.="&";
-						}
-						$get_str.=$key."=".$g_;
-						$ind++;
-					}
-				}
-				else
-				{
-					$get_str="?".$get_params;
-				}
-				$urla.=$get_str;
-			}
-			if(!empty($hash)){
-				$urla.="#".$hash;
-			}
-
-			//unset(memory suppression)
-			unset($action);
-			unset($get_params);
-			unset($params);
-
-			return $this->request->params["root"].$urla;
-
-		}
-		else
-		{
-			if($params=="/"){
-				return $this->request->params["root"];
-			}
-			else
-			{
-				if($params[0]=="@"){
-					return $this->request->params["root"].substr($params,1);
-				}
-				else
-				{
-					return $params;
-				}
-			}
-		}
-
+		return CoreBlockStatic::_getUrl($params);
 	}
 
 	# getRender

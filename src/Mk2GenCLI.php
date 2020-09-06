@@ -94,10 +94,13 @@ class Mk2GenCLI{
 	private function loadingLibsCustom(){
 
 		# get Use Class
-		$useClass=Config::get("useClass");
+		$class=Config::get("class");
 
-		foreach($useClass as $className=>$u_){
-			include_once("bin/".$className.".php");
+
+		foreach($class as $className=>$u_){
+			if(!empty($u_["enable"])){
+				include_once("bin/".$className.".php");
+			}
 		}
 
 	}

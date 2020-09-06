@@ -31,6 +31,7 @@ trait traitCoreBlock{
 				$this->{$key}=$o_;
 			}
 		}
+
 	}
 
 	# (protected) set model

@@ -14,6 +14,11 @@ namespace mk2\core;
 
 class Mk2Gen{
 
+	private const ROUTETYPE_CONTROLLER="controller";
+	private const ROUTETYPE_RENDER="render";
+	private const CONFIG_DATABASE="database";
+	private const CONFIG_ROUTING="routing";
+
 	/**
 	 * constructor
 	 */
@@ -39,10 +44,10 @@ class Mk2Gen{
 				return;
 			}
 
-			if(Request::$params["routeType"]=="controller"){
+			if(Request::$params["routeType"]==self::ROUTETYPE_CONTROLLER){
 				$this->setController();
 			}
-			else if(Request::$params["routeType"]=="render"){
+			else if(Request::$params["routeType"]==self::ROUTETYPE_RENDER){
 				$this->setRender();
 			}
 			else
@@ -80,7 +85,6 @@ class Mk2Gen{
 		# config file Check
 		$configExistCheck=true;
 		if(!file_exists(MK2_PATH_CONF)){
-
 			$configExistCheck=false;
 		}
 
@@ -94,8 +98,8 @@ class Mk2Gen{
 		Config::set(include(MK2_PATH_CONF));
 
 		# option include
-		if(!empty(Config::get("optionInclude"))){
-			$includes=Config::get("optionInclude");
+		if(!empty(Config::get("include"))){
+			$includes=Config::get("include");
 			foreach($includes as $o_){
 				if(file_exists(MK2_PATH_APP.$o_)){
 					include(MK2_PATH_APP.$o_);
@@ -103,11 +107,22 @@ class Mk2Gen{
 			}
 		}
 
-		if(empty(Config::get("routing"))){
+		if(is_string(Config::get(self::CONFIG_DATABASE))){
+			$getDatabase=include(Config::get(self::CONFIG_DATABASE));
+			Config::setDetail(self::CONFIG_DATABASE,$getDatabase);
+		}
+
+		if(is_string(Config::get(self::CONFIG_ROUTING))){
+			$getRouting=include(Config::get(self::CONFIG_ROUTING));
+			Config::setDetail(self::CONFIG_ROUTING,$getRouting);
+		}
+
+		if(empty(Config::get(self::CONFIG_ROUTING))){
 			http_response_code(500);
 			throw new \Exception("[ROUTING ERROR] Routing information is not set.");
 		}
-		$this->routes=Config::get("routing");
+
+		$this->routes=Config::get(self::CONFIG_ROUTING);
 
 	}
 
@@ -116,36 +131,41 @@ class Mk2Gen{
 	private function loadingLibsCustom(){
 
 		# get Use Class
-		$useClass=Config::get("useClass");
+		$class=Config::get("class");
 
-		foreach($useClass as $className=>$u_){
+		if(!$class){
+			return;
+		}
 
-			if($className=="Render"){
+		foreach($class as $className=>$u_){
+
+			if(!empty($u_["enable"])){
+
+				if($className!="Render"){
+					include_once("bin/".$className.".php");
+					continue;
+				}
+
 				$templateEngine=Config::get("templateEngine");
+	
+				if(!$templateEngine){
+					include_once("bin/".$className.".php");
+					continue;
+				}
 
-				if($templateEngine){
-
-					if($templateEngine=="Smarty"){
-						# if Smarty..
-						include_once("bin/Render-of-Smarty.php");
-					}
-					else if($templateEngine=="Twig"){
-						# if Twig..
-						include_once("bin/Render-of-Twig.php");
-					}
-					else
-					{
-						throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');
-					}
+				if($templateEngine=="Smarty"){
+					# if Smarty..
+					include_once("bin/Render-of-Smarty.php");
+				}
+				else if($templateEngine=="Twig"){
+					# if Twig..
+					include_once("bin/Render-of-Twig.php");
 				}
 				else
 				{
-					include_once("bin/".$className.".php");
+					throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');
 				}
-			}
-			else
-			{
-				include_once("bin/".$className.".php");
+	
 			}
 		}
 
@@ -185,19 +205,20 @@ class Mk2Gen{
 			$enable_cont_urls[]=$cont_url;
 		}
 
-		if(Config::get("allowDirectory")){
-			$allow_dir=Config::get("allowDirectory");
+		$class=Config::get("class");
 
-			if(!empty($allow_dir["Controller"])){
-				foreach($allow_dir["Controller"] as $a_){
-					$cont_url=MK2_PATH_APP_CONTROLLER.$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
-					if(!empty(file_exists($cont_url))){
-						$enable_cont_urls[]=$cont_url;
-					}
-					$cont_url=$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
-					if(!empty(file_exists($cont_url))){
-						$enable_cont_urls[]=$cont_url;
-					}
+		if(!empty($class["Controller"]["allowDirectory"])){
+
+			$allow_dir=$class["Controller"]["allowDirectory"];
+
+			foreach($allow_dir as $a_){
+				$cont_url=MK2_PATH_APP_CONTROLLER.$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
+				if(!empty(file_exists($cont_url))){
+					$enable_cont_urls[]=$cont_url;
+				}
+				$cont_url=$a_."/".ucfirst(Request::$params["controller"])."Controller.php";
+				if(!empty(file_exists($cont_url))){
+					$enable_cont_urls[]=$cont_url;
 				}
 			}
 		}
@@ -325,7 +346,9 @@ class Mk2Gen{
 		$this->controllerCheckModifier($cont,$cont_name,$cont_url);
 
 		# filter before hook.
-		$cont->filterBefore();
+		if(method_exists($cont,"filterBefore")){
+			$cont->filterBefore();
+		}
 
 		# If actionPass is true, the logic in the action method is ignored.
 		if(empty($cont->actionPass)){
@@ -350,7 +373,9 @@ class Mk2Gen{
 		$cont->___rendering($out);
 
 		# filter after hook.
-		$cont->filterAfter();
+		if(method_exists($cont,"filterAfter")){
+			$cont->filterAfter();
+		}
 
 	}
 
@@ -358,13 +383,23 @@ class Mk2Gen{
 
 	private function renderCheckExisted(){
 
-		$render_jugement=false;
+		$renderUrl=MK2_PATH_APP_RENDER.Request::$params["render"].MK2_RENDERING_EXTENSION;
 
-		$render_url=MK2_PATH_APP_RENDER.Request::$params["render"].MK2_RENDERING_EXTENSION;
-
-		if(!empty(file_exists($render_url))){
-			return $render_url;
+		if(file_exists($renderUrl)){
+			return $renderUrl;
 		}
+
+		$class=Config::get("class");
+		if(!empty($class["Render"]["allowDirectory"])){
+			foreach($class["Render"]["allowDirectory"] as $c_){				
+				$renderUrl=MK2_PATH_APP_RENDER.$c_."/".Request::$params["render"].MK2_RENDERING_EXTENSION;
+
+				if(file_exists($renderUrl)){
+					return $renderUrl;
+				}
+			}
+		}
+
 	}
 
 	# (private) setRender
@@ -372,18 +407,18 @@ class Mk2Gen{
 	private function setRender(){
 
 		# render File Exist Check
-		$render_url=$this->renderCheckExisted();
+		$renderUrl=$this->renderCheckExisted();
 
 		# if controller enabled jugement not empty, output error message.
-		if(!$render_url){
+		if(!$renderUrl){
 
-			$errText='"'.Request::$params["render"].'" not Found.'."\n";
+			$errText='render file "'.Request::$params["render"].MK2_RENDERING_EXTENSION.'" not Found.'."\n";
 
 			http_response_code(404);
 			throw new \Exception($errText);
 		}
 
-		include($render_url);
+		include($renderUrl);
 
 	}
 
@@ -408,10 +443,10 @@ class Mk2Gen{
 
 			if(!empty(Request::$params["routeType"])){
 				
-				if(Request::$params["routeType"]=="controller"){
+				if(Request::$params["routeType"]==self::ROUTETYPE_CONTROLLER){
 					$this->setController();
 				}
-				else if(Request::$params["routeType"]=="render"){
+				else if(Request::$params["routeType"]==self::ROUTETYPE_RENDER){
 					$this->setRender();
 				}
 			

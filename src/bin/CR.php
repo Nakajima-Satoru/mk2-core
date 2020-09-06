@@ -34,36 +34,8 @@ class Config{
 	# get
 
 	public static function get($name,$arg1=null){
-		if($name=="useClass"){
-			if(!empty(self::$data[$name])){
-				if(self::$data["useClass"]=="no"){
-					return [];
-				}
-				else
-				{
-					$object=[];
-					$buff=self::$data["useClass"];
-					foreach($buff as $u_){
-						$object[$u_]=true;
-					}
-					return $object;
-				}
-			}
-			else
-			{
-				$object=[
-					"Controller"=>true,
-					"Packer"=>true,
-					"Shell"=>true,
-					"Model"=>true,
-					"Table"=>true,
-					"Validator"=>true,
-					"Render"=>true,
-				];
-				return $object;
-			}
-		}
-		else if($name=="database"){
+
+		if($name=="database"){
 			if(!empty(self::$data[$name])){
 				if($arg1){
 					if(!empty(self::$data[$name][$arg1])){

@@ -42,8 +42,9 @@ class Controller extends CoreBlock{
 	
 	public function ___rendering($out){
 
-		$use_class=Config::get("useClass");
-		if(!empty($use_class["Render"])){
+		$class=Config::get("class");
+
+		if(!empty($class["Render"]["enable"])){
 			if($this->autoRender){
 
 				if(empty($this->renderClass)){
@@ -110,11 +111,5 @@ class Controller extends CoreBlock{
 		return $view_url;
 
 	}
-
-	# filterBefore
-	public function filterBefore(){}
-
-	# filterAfter
-	public function filterAfter(){}
 
 }
