@@ -4,6 +4,8 @@ namespace mk2\core;
 
 class CoreBlockStatic{
 
+	private const CORE_NAMESPACE="mk2\core\\";
+
 	/**
 	 * _addClassLoading
 	 */
@@ -25,7 +27,16 @@ class CoreBlockStatic{
 
 		# Set allow directory
 
-		$allow_dir=Config::get("allowDirectory");
+		$classConf=Config::get("class");
+		if(empty($classConf[$classType]["enable"])){
+			return;
+		}
+
+		$classConf=$classConf[$classType];
+		if(!empty($classConf["allowDirectory"])){
+			$allow_dir=$classConf["allowDirectory"];
+		}
+
 		$allowPathList=[
 			$classPath,
 		];
@@ -34,8 +45,8 @@ class CoreBlockStatic{
 				$allowPathList[]=$a_;
 			}
 		}
-		if(!empty($allow_dir[$classType])){
-			foreach($allow_dir[$classType] as $am){
+		if(!empty($allow_dir)){
+			foreach($allow_dir as $am){
 				$allowPathList[]=$classPath."/".$am."/";
 				$allowPathList[]=$am."/";
 			}
@@ -104,7 +115,7 @@ class CoreBlockStatic{
 					$path=Request::$params["namespace"]."\\".$className.$classType;
 				}
 				else{
-					$path="mk2\core\\".$className.$classType;
+					$path=self::CORE_NAMESPACE.$className.$classType;
 				}
 			}
 
@@ -112,7 +123,7 @@ class CoreBlockStatic{
 				$path=MK2_NAMESPACE."\\".$className.$classType;
 			}
 			if(!class_exists($path)){
-				$path="mk2\core\\".$className.$classType;
+				$path=self::CORE_NAMESPACE.$className.$classType;
 			}
 			if(!class_exists($path)){
 				if($classType=="Packer"){
@@ -131,7 +142,7 @@ class CoreBlockStatic{
 				$pathUseView=MK2_NAMESPACE."\\".$className.$classType."UI";
 
 				if(!class_exists($pathUseView)){
-					$pathUseView="mk2\core\\".$className.$classType."UI";
+					$pathUseView=self::CORE_NAMESPACE.$className.$classType."UI";
 				}
 				if(!class_exists($pathUseView)){
 					// Standard Packer Class..
@@ -151,6 +162,32 @@ class CoreBlockStatic{
 				}
 				else{
 					$outputs->{$classType}->{$className}=$buffer;
+				}
+
+			}
+			else{
+
+				if(!empty($classConf["maintenance"])){
+
+					if($classType=="Table"){
+						if(!empty($outputClassName)){
+							$option["table"]=lcfirst($ouptutClassName);
+						}
+						else
+						{
+							$option["table"]=lcfirst($className);
+						}
+					}
+
+					$loadClassName=self::CORE_NAMESPACE.$classType;
+					$buffer=new $loadClassName($option);
+
+					if(!empty($outputClassName)){
+						$outputs->{$classType}->{$outputClassName}=$buffer;
+					}
+					else{
+						$outputs->{$classType}->{$className}=$buffer;
+					}
 				}
 
 			}
