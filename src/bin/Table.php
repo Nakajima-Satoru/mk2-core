@@ -4,7 +4,7 @@
  * mk2 Table Class
  * 
  * Class for performing database management.
- * Please put the business logic not in here but in the higher class Model class.
+ * Please put the business logic not in here but in the higher class Table class.
  * 
  * @copyright	 Copyright (C) Nakajima Satoru. 
  * @link		 https://www.mk2-php.com/
@@ -118,9 +118,7 @@ class Table extends CoreBlock{
 		return $this->orm->associate($params);
 	}
 
-	# hasMany
-	public function hasMany($params=[]){
-
+	private function _associate($type,$params=[]){
 		if(!empty($params)){
 	
 			$setParams=[];
@@ -130,97 +128,43 @@ class Table extends CoreBlock{
 			foreach($params as $key=>$p_){
 		
 				if(is_int($key)){
-					$modelName=$p_;
+					$table=$p_;
 					$p_=[
-						"model"=>$p_,
+						"table"=>$table,
 					];
 				}
 				else
 				{
-					$modelName=$key;
-					$p_["model"]=$key;
+					$table=$key;
+					$p_["table"]=$table;
 				}
 
-				$p_["opject"]=$this->Table->{$modelName};
+				$p_["opject"]=$this->Table->{$table};
 
-				$setParams[$modelName]=$p_;
+				$setParams[$table]=$p_;
 
 			}
 
-			$this->orm->associate["hasMany"]=$setParams;
+			$this->orm->associate[$type]=$setParams;
 
 		}
 
 		return $this;
+	}
+
+	# hasMany
+	public function hasMany($params=[]){
+		return $this->_associate("hasMany",$params);
 	}
 	
 	# hasOne
 	public function hasOne($params=[]){
-	
-		if(!empty($params)){
-	
-			$setParams=[];	
-			$this->setTable($params);
-	
-			foreach($params as $key=>$p_){
-	
-				if(is_int($key)){
-					$modelName=$p_;
-					$p_=[
-						"model"=>$p_,
-					];
-				}
-				else
-				{
-					$modelName=$key;
-					$p_["model"]=$key;
-				}
-
-				$p_["opject"]=$this->Table->{$modelName};
-
-				$setParams[$modelName]=$p_;
-			}
-
-			$this->orm->associate["hasOne"]=$setParams;
-
-		}
-
-		return $this;
+		return $this->_associate("hasOne",$params);
 	}
 
 	# belongsTo
 	public function belongsTo($params=[]){
-
-		if(!empty($params)){
-
-			$setParams=[];
-			$this->setTable($params);
-
-			foreach($params as $key=>$p_){
-
-				if(is_int($key)){
-					$modelName=$p_;
-					$p_=[
-						"model"=>$p_,
-					];
-				}
-				else
-				{
-					$modelName=$key;
-					$p_["model"]=$key;
-				}
-
-				$p_["opject"]=$this->Table->{$modelName};
-
-				$setParams[$modelName]=$p_;
-
-			}
-
-			$this->orm->associate["belongsTo"]=$setParams;
-
-		}
-
-		return $this;
+		return $this->_associate("belongsTo",$params);
 	}
 
 	public function getSqlLog(){
