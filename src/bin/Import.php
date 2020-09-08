@@ -89,10 +89,16 @@ class Import{
 			$classFileName=[$classFileName];
 		}
 
+		$class=Config::get("class");
+
 		foreach($classFileName as $c){
 
 			// set allow Directory
-			$allow_dir=Config::get("allowDirectory");
+			if(!empty($class[$className]["enable"])){
+				if(!empty($class[$className]["allowDirectory"])){
+					$allowDir=$class[$className]["allowDirectory"];
+				}
+			}
 
 			if($needPath){
 				$classPath=constant("MK2_PATH_APP_".strtoupper($className)).$needPath;
@@ -109,10 +115,15 @@ class Import{
 					$pathList[]=$a_;
 				}
 			}
-			if(!empty($allow_dir[$className])){
-				foreach($allow_dir[$className] as $am){
-					$pathList[]=$classPath.$am."/";
-					$pathList[]=$am."/";
+
+			if(!empty($allowDir)){
+				foreach($allowDir as $am){
+					if($am[0]=="/"){
+						$pathList[]=$am."/";
+					}
+					else{
+						$pathList[]=$classPath.$am."/";
+					}
 				}
 			}
 
@@ -122,19 +133,12 @@ class Import{
 
 				$url=$cm_.$c.$className.".php";
 
-				if(!empty(file_exists($url))){
+				if(file_exists($url)){
 					if(empty(class_exists(basename($c.$className)))){
 						include_once($url);
 					}
 				}
 			}
-/*
-			if($jugement){
-				if(empty(class_exists(basename($c.$className)))){
-					include_once($url);
-				}
-			}
-*/
 		}
 	}
 }
