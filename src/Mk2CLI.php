@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Mark2 | Mk2GenCLI
+ * Mark2 | Mk2CLI
  * 
  * Photoshop library for mk2 command execution.
  * 
@@ -12,7 +12,7 @@
 
 namespace mk2\core;
 
-class Mk2GenCLI{
+class Mk2CLI{
 
 	/**
 	 * constructor
@@ -64,7 +64,6 @@ class Mk2GenCLI{
 		# config file Check
 		$configExistCheck=true;
 		if(!file_exists(MK2_PATH_CONF)){
-
 			$configExistCheck=false;
 		}
 
