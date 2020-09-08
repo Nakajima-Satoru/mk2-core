@@ -27,6 +27,7 @@ function debug($data){
 		print_r('<p style="font-weight:bold;">Debug : '.$arys[0]["file"]."(line ".$arys[0]["line"].")</p>");
 		echo "<pre>";
 		$val=print_r($data,true);
+		$val=sanitize($val);
 		$val=str_replace("<!--","&lt;--",$val);
 		$val=str_replace("-->","--&gt;",$val);
 		echo $val;
