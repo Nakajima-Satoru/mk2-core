@@ -68,7 +68,14 @@ class Routing{
 		if(!empty($params["error"])){
 			foreach($params["error"] as $code=>$p_){
 				# convert route param(error)
-				$params["error"][$code]=$this->convertRouteParam($p_);
+				if(!empty($params["scope"])){
+					foreach($p_ as $code2=>$pp_){
+						$params["error"][$code][$code2]=$this->convertRouteParam($pp_);
+					}
+				}
+				else{
+					$params["error"][$code]=$this->convertRouteParam($p_);
+				}
 			}
 		}
 
@@ -113,13 +120,42 @@ class Routing{
 
 		$beforeRequest=Request::$params;
 
-		if(!empty($this->routes["error"][$errCode])){
-			$errRoute=$this->routes["error"][$errCode];
+		if(!empty($this->routes["scope"])){
+
+			if(!empty($this->routes["error"]["/"][$errCode])){
+				$errRoute=$this->routes["error"]["/"][$errCode];
+			}
+			else if(!empty($this->routes["error"]["/"][null])){
+				$errRoute=$this->routes["error"]["/"][null];
+			}
+
+			foreach($this->routes["error"] as $url=>$ers){
+				$urls=explode("/",$url);
+				if(empty($urls[1])){ $urls[1]=""; }
+				$bases=explode("/",$beforeRequest["base"]);
+				if(empty($bases[1])){ $bases[1]=""; }
+				if($urls[1]==$bases[1]){
+					if(!empty($ers[$errCode])){
+						$errRoute=$ers[$errCode];
+					}
+					else if(!empty($ers[null])){
+						$errRoute=$ers[null];
+					}
+					break;
+				}
+			}
+
 		}
-		else if(!empty($this->routes["error"][null])){
-			$errRoute=$this->routes["error"][null];
+		else
+		{
+			if(!empty($this->routes["error"][$errCode])){
+				$errRoute=$this->routes["error"][$errCode];
+			}
+			else if(!empty($this->routes["error"][null])){
+				$errRoute=$this->routes["error"][null];
+			}
 		}
-		
+
 		if(!empty($errRoute)){
 
 			if(is_callable($errRoute)){
@@ -156,6 +192,7 @@ class Routing{
 		if(!empty($beforeRequest)){
 			Request::$params["beforeRequest"]=$beforeRequest;
 		}
+
 	}
 
 	# (private) defaultCheck
