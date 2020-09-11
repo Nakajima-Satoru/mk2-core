@@ -16,10 +16,12 @@ namespace mk2\core;
 class Render{
 
 	public $__view_output=[];
-	public $templateEngine=null;
+	public $renderBase=null;
+	public $renderBaseViewPart=null;
+	public $renderBaseTemplate=null;
 
 	public function __construct($params=array()){
-		
+
 		if(!empty($params["__view_output"])){
 			$this->__view_output=$params["__view_output"];
 		}
@@ -35,11 +37,23 @@ class Render{
 		$this->Template=$template;
 		$this->render=$render;
 
+		if(!empty($this->__view_output)){
+			foreach($this->__view_output as $key=>$o_){
+				$$key=$o_;
+			}
+		}
+
 		if($this->Template){
 
-			$template_url=$this->Template.MK2_RENDERING_EXTENSION;
+			if(!empty($this->renderBaseTemplate)){
+				$template_url=$this->renderBaseTemplate.$this->Template.MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.MK2_RENDERING_EXTENSION;
+			}
 
-			$twigLoader = new \Twig\Loader\FilesystemLoader(MK2_PATH_APP_TEMPLATE);
+			// load Twig
+			$twigLoader = new \Twig\Loader\FilesystemLoader(dirname($template_url));
 			$Twig = new \Twig\Environment($twigLoader,[
 				'debug' => true,
 			]);
@@ -48,31 +62,39 @@ class Render{
 			$setData=$this->__view_output;
 			$setData["this"]=$this;
 
-			echo $Twig->render($template_url,$setData);
+			echo $Twig->render(basename($template_url),$setData);
 
 		}
 		else
 		{
 
-			//$renderUrl=ucfirst(Request::$params["controller"])."/";
-
 			if($controllerName){
-				$renderUrl=ucfirst($controllerName)."/";
+				$renderUrl=MK2_PATH_APP_RENDER.ucfirst($controllerName)."/";
 			}
 			else
 			{
-				$renderUrl="";
+				$renderUrl=MK2_PATH_APP_RENDER;
 			}
 
 			if(!empty($this->render)){
-				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				}
 			}
 			else
 			{
-				$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=ucfirst(Request::$params["controller"])."/".Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
 			}
 
-			if(!empty(file_exists(MK2_PATH_APP_RENDER.$renderUrl))){
+			if(!empty(file_exists($renderUrl))){
 
 				$twigLoader = new \Twig\Loader\FilesystemLoader(MK2_PATH_APP_RENDER);
 				$Twig = new \Twig\Environment($twigLoader,[
@@ -84,28 +106,32 @@ class Render{
 				$setData["this"]=$this;
 
 				echo $Twig->render($renderUrl,$setData);
-	
+
 			}
 			else
 			{
-
-				$errText= 'Render not Found : A Render file necessary for screen display does not exist.'."\n";
-				$errText= 'Please check if the Render file exists in the following directory.\n'."\n";
-				$errText.= 'Path : '.$renderUrl;
-				echo $errText;
-
+				if(!Config::get("debugMode")){
+					echo "<pre>";
+					$errText= 'Render not Found : A Render file necessary for screen display does not exist.'."\n";
+					$errText= 'Please check if the Render file exists in the following directory.\n'."\n";
+					$errText.= 'Path : '.$renderUrl;
+					echo $errText;
+					$e=new \Exception;
+					echo $e;
+					echo "</pre>";	
+				}
 			}
 		}
 
 	}
 
-	# (protected) set
+	# set
 
 	public function set($name,$value){
 		$this->__view_output[$name]=$value;
 	}
 
-	# (protected) getUrl
+	# getUrl
 
 	public function getUrl($params){
 		return CoreBlockStatic::_getUrl($params);
@@ -114,58 +140,101 @@ class Render{
 	# getRender
 
 	public function getRender($oBuff=false){
+		try{
+			//set layout
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
+			}
+			
+			$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+			if(!empty($this->render)){
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+				}
+				else
+				{
+					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				}
+			}
+			else
+			{
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+			}
 
-		//set layout
-		if(!empty($this->__view_output)){
+			if(!file_exists($renderUrl)){
+				throw new \Exception('render file not found "'.$renderUrl.'"'."\n");
+			}
 
+			// load twig
+			$twigLoader = new \Twig\Loader\FilesystemLoader(dirname($renderUrl));
+			$Twig = new \Twig\Environment($twigLoader,[
+				'debug' => true,
+			]);
+			$Twig->addExtension(new \Twig\Extension\DebugExtension());
+
+			$setData=$this->__view_output;
+			$setData["this"]=$this;
+
+			echo $Twig->render(basename($renderUrl),$setData);
+
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo '<pre style="text-align:left">';
+				echo $e;
+				echo '</pre>';
+			}
 		}
-
-		$renderUrl=ucfirst(Request::$params["controller"])."/";
-
-		if(!empty($this->render)){
-			$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
-		}
-		else
-		{
-			$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
-		}
-
-		$twigLoader = new \Twig\Loader\FilesystemLoader(MK2_PATH_APP_RENDER);
-		$Twig = new \Twig\Environment($twigLoader,[
-			'debug' => true,
-		]);
-		$Twig->addExtension(new \Twig\Extension\DebugExtension());
-
-		$setData=$this->__view_output;
-		$setData["this"]=$this;
-
-		echo $Twig->render($renderUrl,$setData);
 
 	}
 
 	# getViewPart
-
+	
 	public function getViewPart($name,$oBuff=false){
 
-		//set layout
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$$key=$o_;
+		try{
+			//set layout
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$$key=$o_;
+				}
+			}
+
+			if(!empty($this->renderBaseViewPart)){
+				$partUrl=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+			}
+
+			if(!file_exists($partUrl)){
+				throw new \Exception('viewpart file not found "'.$partUrl.'"'."\n");
+			}
+
+			$twigLoader = new \Twig\Loader\FilesystemLoader(MK2_PATH_APP_RENDER);
+			$Twig = new \Twig\Environment($twigLoader,[
+				'debug' => true,
+			]);
+			$Twig->addExtension(new \Twig\Extension\DebugExtension());
+
+			$setData=$this->__view_output;
+			$setData["this"]=$this;
+
+			echo $Twig->render($partUrl,$setData);
+
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo "<pre style='text-align:left'>";
+				echo $e;
+				echo "</pre>";	
 			}
 		}
-
-		$partUrl=$name.MK2_RENDERING_EXTENSION;
-
-		$twigLoader = new \Twig\Loader\FilesystemLoader(MK2_PATH_APP_VIEWPART);
-		$Twig = new \Twig\Environment($twigLoader,[
-			'debug' => true,
-		]);
-		$Twig->addExtension(new \Twig\Extension\DebugExtension());
-
-		$setData=$this->__view_output;
-		$setData["this"]=$this;
-
-		echo $Twig->render($partUrl,$setData);
 
 	}
 
@@ -173,12 +242,16 @@ class Render{
 
 	public function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION)){
+		if(!empty($this->renderBaseViewPart)){
+			$path=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+		}
+		else{
+			$path=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		}
+
+		if(file_exists($path)){
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 	}
+
 }

@@ -2,10 +2,9 @@
 
 /*
 
-mk2 | Render-of-Smarty
+mk2 | Render
 
 A class for outputting HTML tags on the screen etc. and displaying the layout.
-Render class when using template engine "Smarty".
 
 Copylight(C) Nakajima Satoru 2020.
 
@@ -16,7 +15,9 @@ namespace mk2\core;
 class Render{
 
 	public $__view_output=[];
-	public $templateEngine=null;
+	public $renderBase=null;
+	public $renderBaseViewPart=null;
+	public $renderBaseTemplate=null;
 
 	public function __construct($params=array()){
 
@@ -47,13 +48,18 @@ class Render{
 
 		if(!empty($this->__view_output)){
 			foreach($this->__view_output as $key=>$o_){
-				$this->Smarty->assign($key,$o_);
+				$$key=$o_;
 			}
 		}
 
 		if($this->Template){
 
-			$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.MK2_RENDERING_EXTENSION;
+			if(!empty($this->renderBaseTemplate)){
+				$template_url=$this->renderBaseTemplate.$this->Template.MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$template_url=MK2_PATH_APP_TEMPLATE.$this->Template.MK2_RENDERING_EXTENSION;
+			}
 
 			$this->Smarty->assign('this',$this);
 			$this->Smarty->display($template_url);
@@ -71,39 +77,51 @@ class Render{
 			}
 
 			if(!empty($this->render)){
-				$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				}
 			}
 			else
 			{
-				$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=ucfirst(Request::$params["controller"])."/".Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
 			}
 
 			if(!empty(file_exists($renderUrl))){
-
 				$this->Smarty->assign('this',$this);
 				$this->Smarty->display($renderUrl);
-	
 			}
 			else
 			{
-
-				$errText= 'Render not Found : A Render file necessary for screen display does not exist.'."\n";
-				$errText= 'Please check if the Render file exists in the following directory.\n'."\n";
-				$errText.= 'Path : '.$renderUrl;
-				echo $errText;
-
+				if(!Config::get("debugMode")){
+					echo "<pre>";
+					$errText= 'Render not Found : A Render file necessary for screen display does not exist.'."\n";
+					$errText= 'Please check if the Render file exists in the following directory.\n'."\n";
+					$errText.= 'Path : '.$renderUrl;
+					echo $errText;
+					$e=new \Exception;
+					echo $e;
+					echo "</pre>";	
+				}
 			}
 		}
 
 	}
 
-	# (protected) set
+	# set
 
 	public function set($name,$value){
 		$this->__view_output[$name]=$value;
 	}
 
-	# (protected) getUrl
+	# getUrl
 
 	public function getUrl($params){
 		return CoreBlockStatic::_getUrl($params);
@@ -112,44 +130,84 @@ class Render{
 	# getRender
 
 	public function getRender($oBuff=false){
+		try{
+			//set layout
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$this->Smarty->assign($key,$o_);
+				}
+			}
+			
+			$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
+			if(!empty($this->render)){
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.$this->render.MK2_RENDERING_EXTENSION;
+				}
+				else
+				{
+					$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
+				}
+			}
+			else
+			{
+				if(!empty($this->renderBase)){
+					$renderUrl=$this->renderBase.Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+				else{
+					$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
+				}
+			}
 
-		//set layout
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$this->Smarty->assign($key,$o_);
+			if(!file_exists($renderUrl)){
+				throw new \Exception('render file not found "'.$renderUrl.'"'."\n");
+			}
+
+			$this->Smarty->assign("this",$this);
+			$this->Smarty->display($renderUrl);
+
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo '<pre style="text-align:left">';
+				echo $e;
+				echo '</pre>';
 			}
 		}
-
-		$renderUrl=MK2_PATH_APP_RENDER.ucfirst(Request::$params["controller"])."/";
-
-		if(!empty($this->render)){
-			$renderUrl.=$this->render.MK2_RENDERING_EXTENSION;
-		}
-		else
-		{
-			$renderUrl.=Request::$params["action"].MK2_RENDERING_EXTENSION;
-		}
-
-		$this->Smarty->assign("this",$this);
-		$this->Smarty->display($renderUrl);
 
 	}
 
 	# getViewPart
-
+	
 	public function getViewPart($name,$oBuff=false){
 
-		//set layout
-		if(!empty($this->__view_output)){
-			foreach($this->__view_output as $key=>$o_){
-				$this->Smarty->assign($key,$o_);
+		try{
+			//set layout
+			if(!empty($this->__view_output)){
+				foreach($this->__view_output as $key=>$o_){
+					$this->Smarty->assign($key,$o_);
+				}
+			}
+
+			if(!empty($this->renderBaseViewPart)){
+				$partUrl=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+			}
+			else{
+				$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+			}
+
+			if(!file_exists($partUrl)){
+				throw new \Exception('viewpart file not found "'.$partUrl.'"'."\n");
+			}
+
+			$this->Smarty->assign("this",$this);
+			$this->Smarty->display($partUrl);
+
+		}catch(\Exception $e){
+			if(!Config::get("debugMode")){
+				echo "<pre style='text-align:left'>";
+				echo $e;
+				echo "</pre>";	
 			}
 		}
-
-		$partUrl=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
-
-		$this->Smarty->assign("this",$this);
-		$this->Smarty->display($partUrl);
 
 	}
 
@@ -157,12 +215,16 @@ class Render{
 
 	public function existViewPart($name){
 
-		if(file_exists(MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION)){
+		if(!empty($this->renderBaseViewPart)){
+			$path=$this->renderBaseViewPart.$name.MK2_RENDERING_EXTENSION;
+		}
+		else{
+			$path=MK2_PATH_APP_VIEWPART.$name.MK2_RENDERING_EXTENSION;
+		}
+
+		if(file_exists($path)){
 			return true;
 		}
-		else
-		{
-			return false;
-		}
 	}
+
 }
