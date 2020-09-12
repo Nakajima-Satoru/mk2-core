@@ -137,6 +137,8 @@ class Mk2{
 			return;
 		}
 
+		$templateEngine=Config::get("templateEngine");
+
 		foreach($class as $className=>$u_){
 
 			if(!empty($u_["enable"])){
@@ -145,27 +147,28 @@ class Mk2{
 					include_once("bin/".$className.".php");
 					continue;
 				}
+				else{
 
-				$templateEngine=Config::get("templateEngine");
-	
-				if(!$templateEngine){
-					include_once("bin/".$className.".php");
-					continue;
-				}
+					if($templateEngine){
 
-				if($templateEngine=="Smarty"){
-					# if Smarty..
-					include_once("bin/Render-of-Smarty.php");
-				}
-				else if($templateEngine=="Twig"){
-					# if Twig..
-					include_once("bin/Render-of-Twig.php");
-				}
-				else
-				{
-					throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');
-				}
-	
+						if($templateEngine=="Smarty"){
+							# if Smarty..
+							include_once("bin/Render-of-Smarty.php");
+						}
+						else if($templateEngine=="Twig"){
+							# if Twig..
+							include_once("bin/Render-of-Twig.php");
+						}
+						else
+						{
+							throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');
+						}
+		
+					}
+					else{
+						include_once("bin/".$className.".php");
+					}
+				}	
 			}
 		}
 
@@ -344,6 +347,8 @@ class Mk2{
 
 		# action of controller modifier check
 		$this->controllerCheckModifier($cont,$cont_name,$cont_url);
+
+		$cont->view=Request::$params["action"];
 
 		# filter before hook.
 		if(method_exists($cont,"filterBefore")){

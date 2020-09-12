@@ -9,7 +9,7 @@ class CoreBlockStatic{
 	/**
 	 * _addClassLoading
 	 */
-	public static function _addClassLoading($classType,$params,$addAllow=null){
+	public static function _addClassLoading(&$context,$classType,$params,$addAllow=null){
 
 		$outputs=new \stdClass();
 
@@ -201,7 +201,25 @@ class CoreBlockStatic{
 			}
 		}
 
-		return $outputs;
+		// context setting
+		foreach($outputs->{$classType} as $className=>$o_){
+			if(empty($context->{$classType})){
+				$context->{$classType}=new \stdClass();
+			}
+
+			$context->{$classType}->{$className}=$o_;
+		}
+
+		if($classType=="Packer"){
+			foreach($outputs->PackerUI as $className=>$o_){
+				if(empty($context->PackerUI)){
+					$context->PackerUI=new \stdClass();
+				}
+	
+				$context->PackerUI->{$className}=$o_;
+			}
+		}
+
 	}
 
 	/**
@@ -308,4 +326,5 @@ class CoreBlockStatic{
 		}
 
 	}
+
 }

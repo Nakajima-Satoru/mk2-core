@@ -12,6 +12,21 @@ Copylight(C) Nakajima Satoru 2020.
 
 namespace mk2\core;
 
+class Render extends CoreBlock{
+
+	public function rendering(){
+
+		$this->request=Request::getAll();
+
+		if($this->Template){
+			return $this->getTemplate();
+		}
+		else{
+			return $this->getView();
+		}
+	}
+}
+/*
 class Render{
 
 	public $__view_output=[];
@@ -27,6 +42,29 @@ class Render{
 
 		# request
 		$this->request=Request::getall();
+
+	}
+
+	private function include($path,$outBuffer=false){
+
+		if(!empty($this->__view_output)){
+			foreach($this->__view_output as $key=>$o_){
+				$$key=$o_;
+			}
+		}
+
+		if($outBuffer){
+			ob_start();
+		}
+
+		include($view_url);
+
+		if($outBuffer){
+			$contents=ob_get_contents();
+			ob_end_clean();
+	
+			return $contents;	
+		}
 
 	}
 
@@ -233,3 +271,4 @@ class Render{
 	}
 
 }
+*/
