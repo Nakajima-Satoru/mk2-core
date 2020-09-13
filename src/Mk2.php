@@ -15,7 +15,7 @@ namespace mk2\core;
 class Mk2{
 
 	private const ROUTETYPE_CONTROLLER="controller";
-	private const ROUTETYPE_RENDER="render";
+	private const ROUTETYPE_VIEW="render";
 	private const CONFIG_DATABASE="database";
 	private const CONFIG_ROUTING="routing";
 
@@ -40,15 +40,13 @@ class Mk2{
 			$passed=$this->routings();
 
 			// if passed, exit.
-			if(!empty($passed)){
-				return;
-			}
+			if(!empty($passed)){ return; }
 
 			if(Request::$params["routeType"]==self::ROUTETYPE_CONTROLLER){
 				$this->setController();
 			}
-			else if(Request::$params["routeType"]==self::ROUTETYPE_RENDER){
-				$this->setRender();
+			else if(Request::$params["routeType"]==self::ROUTETYPE_VIEW){
+				$this->setView();
 			}
 			else
 			{
@@ -345,6 +343,9 @@ class Mk2{
 			$out=null;
 		}
 
+		# clear Routing data
+		unset($this->Routing);
+
 		# rendering..
 		$cont->___rendering($out);
 
@@ -378,9 +379,9 @@ class Mk2{
 
 	}
 
-	# (private) setRender
+	# (private) setView
 
-	private function setRender(){
+	private function setView(){
 
 		# view File Exist Check
 		$viewUrl=$this->viewCheckExisted();
@@ -445,8 +446,8 @@ class Mk2{
 				if(Request::$params["routeType"]==self::ROUTETYPE_CONTROLLER){
 					$this->setController();
 				}
-				else if(Request::$params["routeType"]==self::ROUTETYPE_RENDER){
-					$this->setRender();
+				else if(Request::$params["routeType"]==self::ROUTETYPE_VIEW){
+					$this->setView();
 				}
 			
 			}
