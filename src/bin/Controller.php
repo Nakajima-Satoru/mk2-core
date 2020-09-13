@@ -46,11 +46,11 @@ class Controller extends CoreBlock{
 					$render=$this->render;
 				}
 
-				if(!$this->existRender()){
+				if(!$this->Response->existRender()){
 					throw new \Exception('"'.ucfirst($this->render).'Render" Class File Not Found.');
 				}
 
-				$this->setRender([
+				$this->Loading->Render([
 					$render=>[
 						"templateEngine"=>$this->templateEngine,
 						"__view_output"=>$this->__view_output,

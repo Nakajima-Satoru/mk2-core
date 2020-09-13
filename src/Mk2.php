@@ -430,7 +430,6 @@ class Mk2{
 
 	# (private) errorLogic
 	private function errorLogic($errMsg,$mode=null){
-
 		$this->Routing->error(http_response_code(),$errMsg);
 
 		try{

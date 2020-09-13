@@ -19,10 +19,10 @@ class Render extends CoreBlock{
 		$this->request=Request::getAll();
 
 		if($this->Template){
-			return $this->getTemplate();
+			return $this->Response->getTemplate();
 		}
 		else{
-			return $this->getView();
+			return $this->Response->getView();
 		}
 	}
 }
