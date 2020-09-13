@@ -52,6 +52,7 @@ class Controller extends CoreBlock{
 
 				$this->setRender([
 					$render=>[
+						"templateEngine"=>$this->templateEngine,
 						"__view_output"=>$this->__view_output,
 						"Template"=>$this->Template,
 						"view"=>$this->view,

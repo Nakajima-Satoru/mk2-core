@@ -140,36 +140,7 @@ class Mk2{
 		$templateEngine=Config::get("templateEngine");
 
 		foreach($class as $className=>$u_){
-
-			if(!empty($u_["enable"])){
-
-				if($className!="Render"){
-					include_once("bin/".$className.".php");
-					continue;
-				}
-				else{
-
-					if($templateEngine){
-
-						if($templateEngine=="Smarty"){
-							# if Smarty..
-							include_once("bin/Render-of-Smarty.php");
-						}
-						else if($templateEngine=="Twig"){
-							# if Twig..
-							include_once("bin/Render-of-Twig.php");
-						}
-						else
-						{
-							throw new \Exception('"'.$templateEngine.'" is an unsupported template engine.');
-						}
-		
-					}
-					else{
-						include_once("bin/".$className.".php");
-					}
-				}	
-			}
+			include_once("bin/".$className.".php");
 		}
 
 	}
@@ -238,7 +209,7 @@ class Mk2{
 	# (private) controllerCheckModifier
 
 	private function controllerCheckModifier($cont,$cont_name,$cont_url){
-
+/*
 		$ignoreList=[
 			"__construct",
 			"setting",
@@ -265,7 +236,7 @@ class Mk2{
 			http_response_code(404);
 			throw new \Exception($errText);
 		}
-
+*/
 		# if action of controller not existed,output error message.
 		if(empty(method_exists($cont,Request::$params["action"]))){
 
@@ -384,23 +355,23 @@ class Mk2{
 
 	}
 
-	# (private) renderCheckExisted
+	# (private) viewCheckExisted
 
-	private function renderCheckExisted(){
+	private function viewCheckExisted(){
 
-		$renderUrl=MK2_PATH_APP_RENDER.Request::$params["render"].MK2_RENDERING_EXTENSION;
+		$viewUrl=MK2_PATH_APP_VIEW.Request::$params["render"].MK2_RENDERING_EXTENSION;
 
-		if(file_exists($renderUrl)){
-			return $renderUrl;
+		if(file_exists($viewUrl)){
+			return $viewUrl;
 		}
 
 		$class=Config::get("class");
-		if(!empty($class["Render"]["allowDirectory"])){
-			foreach($class["Render"]["allowDirectory"] as $c_){				
-				$renderUrl=MK2_PATH_APP_RENDER.$c_."/".Request::$params["render"].MK2_RENDERING_EXTENSION;
+		if(!empty($class["VIEW"]["allowDirectory"])){
+			foreach($class["VIEW"]["allowDirectory"] as $c_){				
+				$viewUrl=MK2_PATH_APP_VIEW.$c_."/".Request::$params["render"].MK2_RENDERING_EXTENSION;
 
-				if(file_exists($renderUrl)){
-					return $renderUrl;
+				if(file_exists($viewUrl)){
+					return $viewUrl;
 				}
 			}
 		}
@@ -411,11 +382,11 @@ class Mk2{
 
 	private function setRender(){
 
-		# render File Exist Check
-		$renderUrl=$this->renderCheckExisted();
+		# view File Exist Check
+		$viewUrl=$this->viewCheckExisted();
 
 		# if controller enabled jugement not empty, output error message.
-		if(!$renderUrl){
+		if(!$viewUrl){
 
 			$errText='render file "'.Request::$params["render"].MK2_RENDERING_EXTENSION.'" not Found.'."\n";
 
@@ -423,7 +394,30 @@ class Mk2{
 			throw new \Exception($errText);
 		}
 
-		include($renderUrl);
+		$templateEngine=Config::get("templateEngine");
+		if($templateEngine){
+
+			if($templateEngine=="Smarty"){
+				if(!class_exists("Smarty")){
+					throw new \Exception('Template engine "Smarty" class not prepared.');
+				}
+	
+				$this->Smarty=new \Smarty();
+				$this->Smarty->display($viewUrl);
+			}
+			else if($templateEngine=="Twig"){
+
+				$twigLoader = new \Twig\Loader\FilesystemLoader(dirname($viewUrl));
+				$Twig = new \Twig\Environment($twigLoader,[
+					'debug' => true,
+				]);
+				$Twig->addExtension(new \Twig\Extension\DebugExtension());
+				echo $Twig->render(basename($viewUrl));
+			}
+		}
+		else{
+			include($viewUrl);
+		}
 
 	}
 
@@ -458,9 +452,7 @@ class Mk2{
 			}
 			else
 			{
-
 				echo $errMsg;
-	
 			}
 
 		}catch(\Exception $e){
