@@ -423,16 +423,12 @@ class Mk2{
 	}
 
 	# (private) setNotFound
-
 	private function setNotFound(){
-
 		http_response_code(404);
 		throw new \Exception("[Page not Found] Please check if the following address is configured in routing.\nPath : ".Request::$params["url"]."\n\n");
-
 	}
 
 	# (private) errorLogic
-
 	private function errorLogic($errMsg,$mode=null){
 
 		$this->Routing->error(http_response_code(),$errMsg);
