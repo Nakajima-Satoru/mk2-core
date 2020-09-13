@@ -343,9 +343,6 @@ class Mk2{
 			$out=null;
 		}
 
-		# clear Routing data
-		unset($this->Routing);
-
 		# rendering..
 		$cont->___rendering($out);
 
@@ -430,9 +427,10 @@ class Mk2{
 
 	# (private) errorLogic
 	private function errorLogic($errMsg,$mode=null){
-		$this->Routing->error(http_response_code(),$errMsg);
-
+		
 		try{
+
+			$this->Routing->error(http_response_code(),$errMsg);
 
 			Request::$params["request"]=[$errMsg];
 
@@ -452,6 +450,7 @@ class Mk2{
 			}
 
 		}catch(\Exception $e){
+			echo "<pre>".$errMsg."</pre>";
 			echo "<pre>".$e."</pre>";
 		}
 
