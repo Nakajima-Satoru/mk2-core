@@ -69,30 +69,3 @@ function sanitize($string,$mode="html"){
 
 	return $string;
 }
-
-# original json encode
-
-function jsonEnc($params,$mode=true){
-
-	if($mode){
-		return json_encode($params,JSON_UNESCAPED_UNICODE);
-	}
-	else
-	{
-		return json_encode($params);
-	}
-}
-
-# original json decode
-
-function jsonDec($params,$mode=true){
-
-	if($mode){
-		return json_decode($params,true);
-	}
-	else
-	{
-		return json_decode($params);
-	}
-
-}
