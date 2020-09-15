@@ -15,6 +15,9 @@ namespace mk2\core;
 class Render extends CoreBlock{
 
 	public function rendering(){
+
+		$this->request=Request::getAll();
+
 		if($this->Template){
 			return $this->Response->getTemplate();
 		}
