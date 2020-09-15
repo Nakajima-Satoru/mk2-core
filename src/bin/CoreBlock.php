@@ -52,6 +52,7 @@ trait traitCoreBlock{
 			}
 
 			$this->Smarty=new \Smarty();
+			$this->Smarty->compile_dir=MK2_PATH_APP_TEMPORARY."smarty";
 		}
 		else if($this->templateEngine=="Twig"){
 
