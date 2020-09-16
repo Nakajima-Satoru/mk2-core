@@ -69,20 +69,7 @@ class Import{
 
 	}
 
-	# Import Plugin	Library
-
-	public static function Plugin($path){
-
-		$plugin_path=MK2_PATH_APP_PLUGIN.$path;
-
-		if(!empty(file_exists($plugin_path))){
-			include($plugin_path);
-		}
-
-	}
-
 	# (private) _import
-
 	private static function _import($className,$classFileName,$addAllow=null,$needPath=null){
 
 		if(!is_array($classFileName)){
