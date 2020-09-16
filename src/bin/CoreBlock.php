@@ -127,6 +127,8 @@ trait traitCoreBlock{
 
 		}catch(\Exception $e){
 			echo $e;
+		}catch(\Error $e){
+			echo $e;
 		}
 	}
 	
