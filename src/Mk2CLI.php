@@ -14,6 +14,8 @@ namespace mk2\core;
 
 class Mk2CLI{
 
+	private const CONFIG_DATABASE="database";
+
 	/**
 	 * constructor
 	 */
@@ -37,6 +39,9 @@ class Mk2CLI{
 			$this->setShell($argv);
 
 		}catch(\Exception $e){
+			print_r($e);
+		}
+		catch(\Error $e){
 			print_r($e);
 		}
 		
@@ -77,13 +82,18 @@ class Mk2CLI{
 		Config::set(include(MK2_PATH_CONF));
 
 		# option include
-		if(!empty(Config::get("optionInclude"))){
-			$includes=Config::get("optionInclude");
+		if(!empty(Config::get("include"))){
+			$includes=Config::get("include");
 			foreach($includes as $o_){
 				if(file_exists(MK2_PATH_APP.$o_)){
 					include(MK2_PATH_APP.$o_);
 				}
 			}
+		}
+
+		if(is_string(Config::get(self::CONFIG_DATABASE))){
+			$getDatabase=include(Config::get(self::CONFIG_DATABASE));
+			Config::setDetail(self::CONFIG_DATABASE,$getDatabase);
 		}
 
 	}
@@ -95,9 +105,12 @@ class Mk2CLI{
 		# get Use Class
 		$class=Config::get("class");
 
+		if(!$class){
+			return;
+		}
 
 		foreach($class as $className=>$u_){
-			if(!empty($u_["enable"])){
+			if($className!="Render"){
 				include_once("bin/".$className.".php");
 			}
 		}
@@ -107,29 +120,6 @@ class Mk2CLI{
 	# (private) shellCheckModifier
 
 	private function shellCheckModifier($shell,$shellAction,$shellClassName){
-
-		$ignoreList=[
-			"__construct",
-			"setModel",
-			"setTable",
-			"setValidator",
-			"setPacker",
-			"setController",
-			"setShell",
-			"getUrl",
-			"redirect",
-			"getRender",
-			"getViewPart",
-			"existRender",
-			"existViewPart",
-			"existTemplate",
-		];
-
-
-		# if action of shell not existed,output error message.
-		if(empty(method_exists($shell,$shellAction))){
-			throw new \Exception('not Found "'.$shellClassName.'" Class on public "'.$shellAction.'" method.');
-		}
 
 		$check_method=new \ReflectionMethod($shellClassName, $shellAction);
 		$method_data=\Reflection::getModifierNames($check_method->getModifiers());
@@ -165,16 +155,43 @@ class Mk2CLI{
 
 		$shell=new $shellClassName();
 
-		if(empty($argv[1])){
-			$argv[1]="index";
+		# filter before hook.
+		if(method_exists($shell,"filterBefore")){
+			$shell->filterBefore();
 		}
 
-		$shellAction=$argv[1];
+		array_shift($argv);
+
+		$request=[];
+		$shellAction="index";
+		foreach($argv as $ind=>$a_){
+			if($a_[0]=="-"){
+				$as_=explode("=",substr($a_,1));
+				if(count($as_)==1){
+					$request[$as_[0]]=true;
+				}
+				else{
+					$request[$as_[0]]=$as_[1];
+				}
+			}
+			else{
+				if($ind==0){
+					$shellAction=$a_;
+				}
+			}
+		}
+
 		$this->shellCheckModifier($shell,$shellAction,$shellClassName);
 
-		$out=$shell->{$shellAction}();
+		if($request){
+			$out=$shell->{$shellAction}($request);
+		}
+		else{
+			$out=$shell->{$shellAction}();
+		}
 
 		echo $out;
+
 	}
 
 }

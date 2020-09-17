@@ -135,8 +135,6 @@ class Mk2{
 			return;
 		}
 
-		$templateEngine=Config::get("templateEngine");
-
 		foreach($class as $className=>$u_){
 			include_once("bin/".$className.".php");
 		}
@@ -207,34 +205,7 @@ class Mk2{
 	# (private) controllerCheckModifier
 
 	private function controllerCheckModifier($cont,$cont_name,$cont_url){
-/*
-		$ignoreList=[
-			"__construct",
-			"setting",
-			"setModel",
-			"setPacker",
-			"setValidator",
-			"setController",
-			"setShell",
-			"getUrl",
-			"redirect",
-			"getRender",
-			"getViewPart",
-			"existRender",
-			"existViewPart",
-			"existTemplate",
-			"set",
-		];
 
-		if(in_array(Request::$params["action"],$ignoreList)){
-			$errText='Access error: The "'.Request::$params["action"].'" action is prepared as a special method, so it cannot access the "'.Request::$params["action"].'" method of "'.$cont_name.'".'."\n";
-			$errText.='Specify an action name different from "'.Request::$params["action"].'" or adjust the routing settings.'."\n";
-			$errText.= 'Path : '.$cont_url."\n\n";
-
-			http_response_code(404);
-			throw new \Exception($errText);
-		}
-*/
 		# if action of controller not existed,output error message.
 		if(empty(method_exists($cont,Request::$params["action"]))){
 

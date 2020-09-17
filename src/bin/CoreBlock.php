@@ -16,6 +16,7 @@ include_once("CoreBlockStatic.php");
 include_once("Loading.php");
 include_once("Response.php");
 
+
 # Correspond with trait
 trait traitCoreBlock{
 
@@ -39,9 +40,13 @@ trait traitCoreBlock{
 				$this->{$key}=$o_;
 			}
 		}
-		
+
 		$this->Loading=new Loading($this);
 		$this->Response=new Response($this);
+		if(php_sapi_name()=="cli"){
+			include_once("CLI.php");
+			$this->CLI=new CLI($this);
+		}
 
 		$this->templateEngine=Config::get("templateEngine");
 
