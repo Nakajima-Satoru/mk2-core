@@ -23,6 +23,7 @@ class Response{
 	# View values set
 	public function set($name,$value){
 		$this->context->__view_output[$name]=$value;
+		return $this;
 	}
 
 	// getTemplate
