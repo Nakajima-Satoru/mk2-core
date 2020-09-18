@@ -153,6 +153,17 @@ class CoreBlockStatic{
 				}
 			}
 
+
+			if($classType=="Table"){
+				if(!empty($outputClassName)){
+					$option["table"]=lcfirst($ouptutClassName);
+				}
+				else
+				{
+					$option["table"]=lcfirst($className);
+				}
+			}
+
 			if(class_exists($path)){
 
 				$buffer=new $path($option);
@@ -168,16 +179,6 @@ class CoreBlockStatic{
 			else{
 
 				if(!empty($classConf["maintenance"])){
-
-					if($classType=="Table"){
-						if(!empty($outputClassName)){
-							$option["table"]=lcfirst($ouptutClassName);
-						}
-						else
-						{
-							$option["table"]=lcfirst($className);
-						}
-					}
 
 					$loadClassName=self::CORE_NAMESPACE.$classType;
 					$buffer=new $loadClassName($option);
