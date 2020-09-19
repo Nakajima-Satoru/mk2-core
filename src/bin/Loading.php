@@ -63,4 +63,11 @@ class Loading{
 		return $this;
 	}
 
+	# UI
+	# By enumerating the UI class you want to use here, it will be loaded automatically.
+	public function UI($params,$addAllow=null){
+		CoreBlockStatic::_addClassLoading($this->context,"UI",$params,$addAllow);
+		return $this;
+	}
+
 }

@@ -15,59 +15,57 @@ namespace mk2\core;
 class Import{
 
 	# Import Controller Class
-
 	public static function Controller($name,$path=null){
 		self::_import("Controller",$name,null,$path);
 	}
 
 	# Import Model Class
-
 	public static function Model($name,$path=null){
 		self::_import("Model",$name,null,$path);
 
 	}
 
 	# Import Table Class
-
 	public static function Table($name,$path=null){
 		self::_import("Table",$name,null,$path);
 
 	}
 
 	# Import Schema Class
-
 	public static function Schema($name,$path=null){
 		self::_import("Schema",$name,null,$path);
 
 	}
 
 	# Import Validator Class
-
 	public static function Validator($name,$path=null){
 		self::_import("Validator",$name,null,$path);
 
 	}
 
 	# Import Packer Class
-
 	public static function Packer($name,$path=null){
 		self::_import("Packer",$name,[MK2_PATH_VENDOR."mk2/packer/src/"],$path);
 
 	}
 
 	# Import Shell Class
-
 	public static function Shell($name,$path=null){
 		self::_import("Shell",$name,null,$path);
 
 	}
 
 	# Import Render Class
-
 	public static function Render($name,$path=null){
 		self::_import("Render",$name,null,$path);
 
 	}
+
+	# Import UI Class
+	public static function UI($name,$path=null){
+		self::_import("UI",$name,[MK2_PATH_VENDOR."mk2/packer/src/"],$path);
+	}
+	
 
 	# (private) _import
 	private static function _import($className,$classFileName,$addAllow=null,$needPath=null){

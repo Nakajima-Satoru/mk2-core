@@ -70,8 +70,8 @@ class Controller extends CoreBlock{
 
 				unset($this->Render->{$render});
 
-				if(!empty($this->PackerUI)){
-					$renderClass->UI=$this->PackerUI;
+				if(!empty($this->UI)){
+					$renderClass->UI=$this->UI;
 				}
 
 				$renderClass->rendering();

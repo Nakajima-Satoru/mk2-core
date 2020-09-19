@@ -14,11 +14,11 @@ class CoreBlockStatic{
 		$outputs=new \stdClass();
 
 		$outputs->{$classType}=new \stdClass();
-
+/*
 		if($classType=="Packer"){
 			$outputs->PackerUI=new \stdClass();
 		}
-
+*/
 		$classPath=constant("MK2_PATH_APP_".strtoupper($classType));
 		
 		if(!is_array($params)){
@@ -78,6 +78,7 @@ class CoreBlockStatic{
 			}
 
 			# If Initialize file existe. Initialize data on marge.
+			/*
 			if(empty($option["_independent"])){
 				$initPath=MK2_PATH_APPCONFINIT.$className.$classType."Init.php";
 				if(file_exists($initPath)){
@@ -88,6 +89,7 @@ class CoreBlockStatic{
 			else{
 				unset($option["_independent"]);
 			}
+			*/
 
 			$enable_urls=[];
 			foreach($allowPathList as $m_){
@@ -130,29 +132,14 @@ class CoreBlockStatic{
 					// Standard Packer Class..
 					$path="mk2\packer\\".$className.$classType;
 				}
+				else if($classType=="UI"){
+					// Standard Packer Class..
+					$path="mk2\packer\\".$className.$classType;
+				}
 			}
 			if(!class_exists($path)){
 				$path=$className.$classType;
 			}
-
-			if($classType=="Packer"){
-
-				$classNameUseView=$className."UI";
-
-				$pathUseView=MK2_NAMESPACE."\\".$className.$classType."UI";
-
-				if(!class_exists($pathUseView)){
-					$pathUseView=self::CORE_NAMESPACE.$className.$classType."UI";
-				}
-				if(!class_exists($pathUseView)){
-					// Standard Packer Class..
-					$pathUseView="mk2\packer\\".$className.$classType."UI";
-				}
-				if(!class_exists($pathUseView)){
-					$pathUseView=$className.$classType."UI";
-				}
-			}
-
 
 			if($classType=="Table"){
 				if(!empty($outputClassName)){
@@ -193,13 +180,6 @@ class CoreBlockStatic{
 
 			}
 
-			if($classType=="Packer"){
-
-				if(class_exists($pathUseView)){
-					$classNameUseView=substr($classNameUseView,0,-2);
-					$outputs->PackerUI->{$classNameUseView}=new $pathUseView($option);
-				}
-			}
 		}
 
 		// context setting
@@ -209,16 +189,6 @@ class CoreBlockStatic{
 			}
 
 			$context->{$classType}->{$className}=$o_;
-		}
-
-		if($classType=="Packer"){
-			foreach($outputs->PackerUI as $className=>$o_){
-				if(empty($context->PackerUI)){
-					$context->PackerUI=new \stdClass();
-				}
-	
-				$context->PackerUI->{$className}=$o_;
-			}
 		}
 
 	}
