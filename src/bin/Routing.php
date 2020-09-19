@@ -215,6 +215,11 @@ class Routing{
 			"remote"=>$_SERVER["REMOTE_ADDR"],
 		];
 
+		// ELB IP address exists...
+		if(!empty($_SERVER["HTTP_X_FORWARDED_FOR"])){
+			$this->params["option"]["remote"]=$_SERVER["HTTP_X_FORWARDED_FOR"];
+		}
+
 		$queryArea=$requestUrl;
 		if($phpSelf){
 			$queryArea=str_replace($phpSelf."/","",$requestUrl);
