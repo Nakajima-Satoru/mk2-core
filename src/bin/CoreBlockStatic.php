@@ -14,11 +14,7 @@ class CoreBlockStatic{
 		$outputs=new \stdClass();
 
 		$outputs->{$classType}=new \stdClass();
-/*
-		if($classType=="Packer"){
-			$outputs->PackerUI=new \stdClass();
-		}
-*/
+
 		$classPath=constant("MK2_PATH_APP_".strtoupper($classType));
 		
 		if(!is_array($params)){
@@ -77,20 +73,6 @@ class CoreBlockStatic{
 				}
 			}
 
-			# If Initialize file existe. Initialize data on marge.
-			/*
-			if(empty($option["_independent"])){
-				$initPath=MK2_PATH_APPCONFINIT.$className.$classType."Init.php";
-				if(file_exists($initPath)){
-					$init=include($initPath);
-					$option=array_merge($option,$init);
-				}
-			}
-			else{
-				unset($option["_independent"]);
-			}
-			*/
-
 			$enable_urls=[];
 			foreach($allowPathList as $m_){
 
@@ -133,8 +115,8 @@ class CoreBlockStatic{
 					$path="mk2\packer\\".$className.$classType;
 				}
 				else if($classType=="UI"){
-					// Standard Packer Class..
-					$path="mk2\packer\\".$className.$classType;
+					// Standard UI Class..
+					$path="mk2\ui\\".$className.$classType;
 				}
 			}
 			if(!class_exists($path)){

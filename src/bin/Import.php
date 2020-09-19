@@ -63,7 +63,7 @@ class Import{
 
 	# Import UI Class
 	public static function UI($name,$path=null){
-		self::_import("UI",$name,[MK2_PATH_VENDOR."mk2/packer/src/"],$path);
+		self::_import("UI",$name,[MK2_PATH_VENDOR."mk2/ui/src/"],$path);
 	}
 	
 
