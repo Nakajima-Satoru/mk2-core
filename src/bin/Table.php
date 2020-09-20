@@ -36,6 +36,9 @@ class Table extends CoreBlock{
 	public $primaryKey="id";
 
 	public function __construct($option=[]){
+		if(!empty($this->table)){
+			unset($option["table"]);
+		}
 		parent::__construct($option);
 
 		$getDbConnect=Config::get("database");
