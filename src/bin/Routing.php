@@ -56,7 +56,7 @@ class Routing{
 		if(!empty($params["error"])){
 			foreach($params["error"] as $code=>$p_){
 				# convert route param(error)
-				if(!empty($params["scope"])){
+				if(!empty($params["errorScope"])){
 					foreach($p_ as $code2=>$pp_){
 						$params["error"][$code][$code2]=$this->convertRouteParam($pp_);
 					}
@@ -104,7 +104,7 @@ class Routing{
 
 		$beforeRequest=Request::$params;
 
-		if(!empty($this->routes["scope"])){
+		if(!empty($this->routes["errorScope"])){
 
 			if(!empty($this->routes["error"]["/"][$errCode])){
 				$errRoute=$this->routes["error"]["/"][$errCode];
