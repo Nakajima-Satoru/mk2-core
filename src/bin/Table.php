@@ -126,7 +126,7 @@ class Table extends CoreBlock{
 	
 			$setParams=[];
 	
-			$this->setTable($params);
+			$this->Loading->Table($params);
 	
 			foreach($params as $key=>$p_){
 		
