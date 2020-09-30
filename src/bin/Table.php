@@ -75,8 +75,8 @@ class Table extends CoreBlock{
 	/**
 	 * query
 	 */
-	public function query($sql){
-		return $this->orm->query($sql);
+	public function query($sql,$prepare=[]){
+		return $this->orm->query($sql,$prepare);
 	}
 
 	/**
