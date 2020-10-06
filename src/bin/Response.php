@@ -122,7 +122,7 @@ class Response{
 	// getViewPart
 	public function getViewPart($viewPartName,$outputBuffer=false){
 
-		$partUrl=$this->getViewPartPath($viewPathName);
+		$partUrl=$this->getViewPartPath($viewPartName);
 
 		if(!file_exists($partUrl)){
 			throw new \Exception('ViewPart file not found "'.$partUrl.'"'."\n");
@@ -133,7 +133,7 @@ class Response{
 	}
 
 	// getViewPartPath
-	public function getViewPartPath($viewPathName){
+	public function getViewPartPath($viewPartName){
 		if(!empty($this->context->renderBaseViewPart)){
 			$partUrl=$this->context->renderBaseViewPart.$viewPartName.MK2_RENDERING_EXTENSION;
 		}
