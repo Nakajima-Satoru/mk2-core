@@ -112,7 +112,7 @@ class CoreBlockStatic{
 			if(!class_exists($path)){
 				if($classType=="Packer"){
 					// Standard Packer Class..
-					$path="mk2\packer\\".$className.$classType;
+					$path="mk2\packer_".lcfirst($className)."\\".$className.$classType;
 				}
 				else if($classType=="UI"){
 					// Standard UI Class..
