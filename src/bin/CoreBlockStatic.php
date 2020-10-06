@@ -143,7 +143,7 @@ class CoreBlockStatic{
 				}
 				else if($classType=="UI"){
 					// Standard UI Class..
-					$path="mk2\ui\\".$className.$classType;
+					$path="mk2\ui_".lcfirst($className)."\\".$className.$classType;
 				}
 			}
 			if(!class_exists($path)){
