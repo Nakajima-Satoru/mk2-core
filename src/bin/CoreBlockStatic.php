@@ -51,24 +51,51 @@ class CoreBlockStatic{
 		# serach class..
 
 		foreach($params as $key=>$p_){
+			
 			$option=[];
+			$outputClassName=null;
 			if(is_int($key)){
 				if(gettype($p_)=="array"){
 					$className=ucfirst(key($p_));
 					$option=$p_;
 				}
 				else{
+					$p_=explode("\\",$p_);
+					if(empty($p_[1])){
+						$p_=$p_[0];
+					}
+					else{
+						$option["namespace"]=$p_[0]."\\".$p_[1];
+						$p_=$p_[2];
+					}
 					$className=ucfirst($p_);
 				}
 			}
 			else
 			{
-				$option=$p_;
+				$option=$p_;			
 				if(!empty($option["changeClass"])){
-					$className=$option["changeClass"];
+					$changeClass=$option["changeClass"];
+					$changeClass=explode("\\",$changeClass);
+					if(empty($changeClass[1])){
+						$changeClass=$changeClass[0];
+					}
+					else{
+						$option["namespace"]=$changeClass[0]."\\".$changeClass[1];
+						$changeClass=$changeClass[2];
+					}
+					$className=ucfirst($changeClass);
 					$outputClassName=$key;
 				}
 				else{
+					$key=explode("\\",$key);
+					if(empty($key[1])){
+						$key=$key[0];
+					}
+					else{
+						$option["namespace"]=$key[0]."\\".$key[1];
+						$key=$key[2];
+					}
 					$className=ucfirst($key);
 				}
 			}
