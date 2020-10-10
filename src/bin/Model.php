@@ -1,14 +1,13 @@
 <?php
-
-/*
-
-mk2 | Model
-
-Class for handling general business logic.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 Model Class
+ * 
+ * Class for handling general business logic.
+ * 
+ * Copylight(C) Nakajima Satoru 2020.
+ * 
+ */
 
 namespace mk2\core;
 

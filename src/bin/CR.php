@@ -1,16 +1,19 @@
 <?php
-/*
-mk2 | CR (Config / Request)
 
-:Config
-Class to set/get configuration information.
-
-:Request
-Stores request data such as POST and GET.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 | CR (Config / Request)
+ * 
+ * :Config
+ * Class to set/get configuration information.
+ * 
+ * :Request
+ * Stores request data such as POST and GET.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 
@@ -20,19 +23,16 @@ class Config{
 	private static $data=[];
 
 	# set
-
 	public static function set($params){
 		self::$data=$params;
 	}
 
 	# setDetail
-
 	public static function setDetail($name,$params){
 		self::$data[$name]=$params;
 	}
 
 	# get
-
 	public static function get($name,$arg1=null){
 
 		if($name=="database"){

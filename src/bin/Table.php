@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * 
  * mk2 Table Class
  * 
  * Class for performing database management.

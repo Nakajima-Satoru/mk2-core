@@ -1,25 +1,26 @@
 <?php
 
-/*
+/**
+ * 
+ * mk2 Controller Class
+ * 
+ * Basic class of Controller.
+ * The 'Controller' changes the contents of processing and display based on the request from the user.
+ * In the case of the basic MVC framework, Controller often has a core meaning.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
 
-mk2 | Controller
-
-Basic class of Controller.
-The 'Controller' changes the contents of processing and display based on the request from the user.
-In the case of the basic MVC framework, Controller often has a core meaning.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
-
-namespace mk2\core;
+ namespace mk2\core;
 
 class Controller extends CoreBlock{
 
 	public $autoRender=true;
 	public $actionPass=false;
 
-	# _settings
+	// _settings
 	public function __construct($option=null){
 		parent::__construct($option);
 
@@ -32,8 +33,7 @@ class Controller extends CoreBlock{
 		}
 	}
 
-	# Rendering Method
-	
+	// Rendering Method
 	public function ___rendering($out){
 
 		$class=Config::get("class");
@@ -80,10 +80,6 @@ class Controller extends CoreBlock{
 		}
 
 		echo $out;
-
-		//unset(memory suppression)
-		unset($out);
-		unset($View);
 
 	}
 

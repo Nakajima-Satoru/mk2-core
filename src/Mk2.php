@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Mark2 | Mk2
+ * Mark2 Mk2
  * 
  * Class for starting the core library of PHP framework mk2 (provisional).
  * 
- * Copylight(C) Nakajima Satoru 2020.
- * URL https://www.mk2-php.com/
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
  * 
  */
 

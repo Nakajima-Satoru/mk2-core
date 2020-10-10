@@ -1,14 +1,15 @@
 <?php
 
-/*
-
-mk2 |  Shell
-
-It is a class to execute from the console application.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 |  Shell
+ * 
+ * It is a class to execute from the console application.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 

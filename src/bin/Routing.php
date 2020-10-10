@@ -1,14 +1,15 @@
 <?php
 
-/*
-
-mk2 | Routing
-
-A core library for routing.
-
-Copylight (C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 Routing Class
+ *  
+ * A core library for routing.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 

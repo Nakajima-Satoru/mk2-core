@@ -1,14 +1,14 @@
 <?php
-
-/*
-
-mk2 | Import
-
-Static class methods when each class requires preloading.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 Import Class
+ * 
+ * Static class methods when each class requires preloading.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ *  
+ */
 
 namespace mk2\core;
 

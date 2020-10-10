@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Mark2 Construct
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
+
 setDefine("MK2_SYSNAME","app");
 setDefine("MK2_ROOT_LEVEL",1);
 setDefine("MK2_PATH_VENDOR","../../vendor/");

@@ -1,14 +1,15 @@
 <?php
 
-/*
-
-mk2 | Render
-
-A class for outputting HTML tags on the screen etc. and displaying the layout.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 Render Class
+ * 
+ * A class for outputting HTML tags on the screen etc. and displaying the layout.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ *  
+ */
 
 namespace mk2\core;
 

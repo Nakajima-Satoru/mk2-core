@@ -1,14 +1,16 @@
 <?php
-/*
 
-mk2 | CoreBlock
-
-CoreBlock is the base parent class for all class elements.
-It will not be used by itself, it will change to a class according to the purpose such as Controller or Model.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 CoreBlock Class
+ * 
+ * CoreBlock is the base parent class for all class elements.
+ * It will not be used by itself, it will change to a class according to the purpose such as Controller or Model.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ *  
+ */
 
 namespace mk2\core;
 
@@ -16,8 +18,9 @@ include_once("CoreBlockStatic.php");
 include_once("Loading.php");
 include_once("Response.php");
 
-
-# Correspond with trait
+/**
+ *  Correspond with trait
+ */ 
 trait traitCoreBlock{
 
 	public $__view_output=[];
@@ -30,28 +33,33 @@ trait traitCoreBlock{
 	public $renderBaseViewPart=null;
 	public $templateEngine=null;
 
-	# protected $_obj=[];
-
 	public function __construct($option=null){
 
-		# option setting
+		// option setting
 		if(!empty($option)){
 			foreach($option as $key=>$o_){
 				$this->{$key}=$o_;
 			}
 		}
 
+		// Set Loading Class
 		$this->Loading=new Loading($this);
+
+		// Set Response Class
 		$this->Response=new Response($this);
 		if(php_sapi_name()=="cli"){
-			include_once("CLI.php");
-			$this->CLI=new CLI($this);
+
+			// Set Command Class (CLI Mode Only)
+			include_once("Command.php");
+			$this->Command=new Command($this);
+
 		}
 
 		$this->templateEngine=Config::get("templateEngine");
 
 		if($this->templateEngine=="Smarty"){
 
+			// Set Template Engine (Smarty)
 			if(!class_exists("Smarty")){
 				throw new \Exception('Template engine "Smarty" class not prepared.');
 			}
@@ -61,6 +69,7 @@ trait traitCoreBlock{
 		}
 		else if($this->templateEngine=="Twig"){
 
+			// Set Template Engine (Twig)
 			if(!class_exists("Twig\Loader\FilesystemLoader")){
 				throw new \Exception('Template engine "Twig" not prepared.');
 			}
@@ -69,8 +78,11 @@ trait traitCoreBlock{
 
 	}
 
-	// include
+	/**
+	 * include
+	 */
 	public function _include($path,$outputBuffer=false){
+
 		try{
 
 			if(!empty($this->__view_output)){
@@ -82,6 +94,7 @@ trait traitCoreBlock{
 			if(!empty($this->templateEngine)){
 
 				if($this->templateEngine=="Smarty"){
+					
 					$this->Smarty->assign('this',$this);
 					
 					if($outputBuffer){

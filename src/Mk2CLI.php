@@ -1,15 +1,16 @@
 <?php
 
 /**
- * Mark2 | Mk2CLI
+ * 
+ * Mark2 Mk2CLI
  * 
  * Photoshop library for mk2 command execution.
  * 
- * Copylight(C) Nakajima Satoru 2020.
- * URL https://www.mk2-php.com/
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
  * 
  */
-
+ 
 namespace mk2\core;
 
 class Mk2CLI{
@@ -39,10 +40,10 @@ class Mk2CLI{
 			$this->setShell($argv);
 
 		}catch(\Exception $e){
-			print_r($e);
+			$this->errorLogic($e);
 		}
 		catch(\Error $e){
-			print_r($e);
+			$this->errorLogic($e);
 		}
 		
 	}
@@ -192,6 +193,38 @@ class Mk2CLI{
 
 		echo $out;
 
+		# filter after hook.
+		if(method_exists($shell,"filterAfter")){
+			$shell->filterAfter();
+		}
+
 	}
 
+	public function errorLogic($e){
+
+		include_once("bin/Command.php");
+
+		try{
+			
+			$errorShellFile=MK2_PATH_APP_SHELL."ErrorShell.php";
+
+			if(!file_exists($errorShellFile)){
+				throw new \Exception('"ErrorShell" class not found.');
+			}
+	
+			include($errorShellFile);
+			
+			$errorShell=new ErrorShell();
+			$errorShell->index($e);
+
+		}catch(\Exception $e2){
+			$command=new Command();
+			$command
+				->lightRed("---------------------------------------------------------------------------------------------------------------------")
+				->lightRed($e)
+				->lightRed("---------------------------------------------------------------------------------------------------------------------")
+			;
+		}
+
+	}
 }

@@ -1,15 +1,16 @@
 <?php
 
-/*
-
-mk2 | Validator
-
-Class for performing validation from input data.
-Please put the business logic not in here but in the higher class Model class.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 Validator Class
+ * 
+ * Class for performing validation from input data.
+ * Please put the business logic not in here but in the higher class Model class.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ * 
+ */
 
 namespace mk2\core;
 

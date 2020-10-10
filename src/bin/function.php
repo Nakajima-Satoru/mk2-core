@@ -1,15 +1,17 @@
 <?php
-/*
-mk2 | function
 
-Commonly used functions.
-
-Copylight(C) Nakajima Satoru 2020.
-
-*/
+/**
+ * 
+ * mk2 function
+ * 
+ * Commonly used functions.
+ * 
+ * @copyright	 Copyright (C) Nakajima Satoru. 
+ * @link		 https://www.mk2-php.com/
+ *  
+ */
 
 # debug
-
 function debug($data){
 
 	$e = new Exception;
@@ -37,7 +39,6 @@ function debug($data){
 }
 
 # sanitise
-
 function sanitize($string,$mode="html"){
 
 	if($mode=="html"){
