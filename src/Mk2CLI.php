@@ -202,22 +202,31 @@ class Mk2CLI{
 
 	public function errorLogic($e){
 
-		include_once("bin/Command.php");
-
 		try{
 			
-			$errorShellFile=MK2_PATH_APP_SHELL."ErrorShell.php";
+			$errorShellFileName=Config::get("cliErrorShell");
+			if(!$errorShellFileName){
+				$errorShellFileName="Error";
+			}
+			$errorShellClassName=$errorShellFileName."Shell";
+			$errorShellFile=MK2_PATH_APP_SHELL.$errorShellClassName.".php";
 
 			if(!file_exists($errorShellFile)){
-				throw new \Exception('"ErrorShell" class not found.');
+				throw new \Exception('"'.$errorShellFileName.'" class not found.');
 			}
-	
+
 			include($errorShellFile);
-			
-			$errorShell=new ErrorShell();
+
+			if(class_exists('mk2\core\\'.$errorShellClassName)){
+				$errorShellClassName='mk2\core\\'.$errorShellClassName;
+			}
+
+			$errorShell=new $errorShellClassName();
 			$errorShell->index($e);
 
 		}catch(\Exception $e2){
+			
+			include_once("bin/Command.php");
 			$command=new Command();
 			$command
 				->lightRed("---------------------------------------------------------------------------------------------------------------------")
